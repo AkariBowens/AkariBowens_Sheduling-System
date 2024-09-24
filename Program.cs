@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AkariBowens_Sheduling_System.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,10 @@ namespace AkariBowens_Sheduling_System
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            
+            DBConnection.OpenConnection();
+            Application.Run(new login_form());
+            DBConnection.CloseConnection();
         }
     }
 }
