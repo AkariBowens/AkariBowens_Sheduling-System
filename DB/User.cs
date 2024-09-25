@@ -36,5 +36,19 @@ namespace AkariBowens_Sheduling_System.DB
         }
 
         // ----- Constructor ----- //
+        public User(int userId, string username, string password, int active)
+        {
+            UserID = userId;
+            UserName = username;
+            Password = password;
+            Active = active;
+
+            // Change later 
+            // CreateDate = new DateTime();
+
+            CreatedBy = "Admin";
+            LastUpdate = new Timestamp();
+            LastUpdatedBy = "Admin";
+        }
     }
 }

@@ -34,14 +34,15 @@
             this.username_textBox = new System.Windows.Forms.TextBox();
             this.password_textBox = new System.Windows.Forms.TextBox();
             this.login_label = new System.Windows.Forms.Label();
+            this.cancel_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // login_button
             // 
-            this.login_button.Location = new System.Drawing.Point(121, 292);
+            this.login_button.Location = new System.Drawing.Point(63, 296);
             this.login_button.Margin = new System.Windows.Forms.Padding(4);
             this.login_button.Name = "login_button";
-            this.login_button.Size = new System.Drawing.Size(136, 44);
+            this.login_button.Size = new System.Drawing.Size(94, 44);
             this.login_button.TabIndex = 0;
             this.login_button.Text = "Log in";
             this.login_button.UseVisualStyleBackColor = true;
@@ -99,11 +100,23 @@
             this.login_label.TabIndex = 5;
             this.login_label.Text = "Log in";
             // 
+            // cancel_button
+            // 
+            this.cancel_button.Location = new System.Drawing.Point(206, 296);
+            this.cancel_button.Margin = new System.Windows.Forms.Padding(4);
+            this.cancel_button.Name = "cancel_button";
+            this.cancel_button.Size = new System.Drawing.Size(94, 44);
+            this.cancel_button.TabIndex = 6;
+            this.cancel_button.Text = "Cancel";
+            this.cancel_button.UseVisualStyleBackColor = true;
+            this.cancel_button.Click += new System.EventHandler(this.cancel_button_Click);
+            // 
             // login_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(372, 413);
+            this.Controls.Add(this.cancel_button);
             this.Controls.Add(this.login_label);
             this.Controls.Add(this.password_textBox);
             this.Controls.Add(this.username_textBox);
@@ -128,6 +141,7 @@
         private System.Windows.Forms.TextBox username_textBox;
         private System.Windows.Forms.TextBox password_textBox;
         private System.Windows.Forms.Label login_label;
+        private System.Windows.Forms.Button cancel_button;
     }
 }
 

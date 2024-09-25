@@ -98,6 +98,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CurrentUserViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CurrentUserViewForm.Designer.cs">
+      <DependentUpon>CurrentUserViewForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DB\Appointments.cs" />
     <Compile Include="DB\CurrentUser.cs" />
     <Compile Include="DB\Customer.cs" />
@@ -111,6 +117,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CurrentUserViewForm.resx">
+      <DependentUpon>CurrentUserViewForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="login_form.resx">
       <DependentUpon>login_form.cs</DependentUpon>
     </EmbeddedResource>

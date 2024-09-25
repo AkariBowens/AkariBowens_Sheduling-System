@@ -24,6 +24,8 @@ namespace AkariBowens_Sheduling_System
         }
 
         private readonly string clientLanguage = CultureInfo.CurrentCulture.Name;
+        private string userPass;
+        private string userName;
 
         private void login_form_Load(object sender, EventArgs e)
         {
@@ -95,8 +97,14 @@ namespace AkariBowens_Sheduling_System
             {
                 // login currentUser
                 // -- this should update the static class
-                // and log the login with the time it happened
+
                 // then it should open a new form filled with the data from the currentUser
+
+                // Calls constructor and the constructor logs the new login
+                //CurrentUser(ID, Name, password, location);
+
+                CurrentUserViewForm CurrentUserView = new CurrentUserViewForm();
+                CurrentUserView.Show();
             }
         }
 
@@ -107,12 +115,15 @@ namespace AkariBowens_Sheduling_System
             try
             {
                 // Change to (if usernametxt in DB, then trigger a function that tests whether U&P bot fit criteria)
+                // Remove usrnmtxbx check
                 if (!string.IsNullOrWhiteSpace(username_textBox.Text) && username_textBox.Text == "test")
                 {
                     //compares username to one in db
                     //testUsernameInDB(username_textBox.Text) - returns true or false
                     //field is false
-                    // run ValidateUser()
+                    // run
+                    userName = username_textBox.Text;
+                    ValidateUser();
                 }
             } catch (Exception exc)
             {
@@ -126,12 +137,15 @@ namespace AkariBowens_Sheduling_System
             try
             {
                 // Change to (if usernametxt in DB, then trigger a function that tests whether U&P bot fit criteria)
-                if (!string.IsNullOrWhiteSpace(password_textBox.Text) && username_textBox.Text == "test")
+                // Remove upsswrdtxbx check
+                if (!string.IsNullOrWhiteSpace(password_textBox.Text) && password_textBox.Text == "test")
                 {
-                    //compares username to one in db
+                    
                     //testUsernameInDB(username_textBox.Text) - returns true or false
                     //field is false
-                    // run ValidateUser()
+                    
+                    userPass = username_textBox.Text;
+                    ValidateUser();
                 }
 
             }
@@ -141,6 +155,11 @@ namespace AkariBowens_Sheduling_System
                 username_textBox.BackColor = Color.Tomato;
 
             }
+        }
+
+        private void cancel_button_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
 

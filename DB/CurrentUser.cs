@@ -1,37 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AkariBowens_Sheduling_System.DB
 {
+    // Holds info from logged in user
     internal class CurrentUser
     {
-        // Maybe this is just one single user class, since only one can be logged in anyway
-        // Holds UserID from logged in user
-        // I need a way to initiate a single user that exists for every form
-        // Just a user class won't do it, even if I log in using certain details because where is it stored
-
         // ----- Properties ----- //
         public int CurrentUserID { get; set; }
         // appointments?
         public string UserName { get; set; }
         public string Password { get; set; }
-        
         public string UserLocation { get; set; }
         public static string LogFileName { get; set; } = "Login_History.txt";
 
         // ----- Methods ----- //
-        // LogLastUpdate() - maybe accept login will be on the user class, with a login() method
-        // - FileName.append(time, UserName)
-        // ValidateLogin()
+        
+        // Logs every time a new user is logged in - called in constructor - static?
+        private void LogLastLogin()
+        {
+            // FileStream file = new FileStream();
+            // Serialize
+            // - FileName.append(time, UserName)
+            // For now
+            Console.WriteLine("Username - 15:00 UTC");
+        }
+        
+        // Login method? - CurrentUser.Login() - called in constructor(sets * static currentUser class)
 
+        // Maybe put appointments here instead
+
+        // This only needs to be here because I am only grabbing appointmetns for this user
+        // public GrabAppointments() - $"Select * FROM appointments WHERE userId = {CurrentUserID}"
+        
+        
+        // ----- Constructor ----- //
+        public CurrentUser(int currentID, string username, string pass, string location)
+        {
+            CurrentUserID = currentID;
+            // If this were a secure thing, UserName.encrypt() = username.decrypt() -- or something like this
+            UserName = username;
+            Password = pass;
+            UserLocation = location;
+            LogLastLogin();
+
+            // Call Login() every time this is set?
+        }
 
         // ----- Static Class ----- //
         static CurrentUser()
         {
-            // Call logLastUpdate - NOW() at the time this class is instantiated, pass it back to db? and logfile
+            // Call LogLastLogin - NOW() at the time this class is instantiated, pass it back to db? and logfile
         }
 
         // Have a static "AddUser"?
