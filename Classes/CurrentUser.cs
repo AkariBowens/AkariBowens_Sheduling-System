@@ -17,7 +17,7 @@ namespace AkariBowens_Sheduling_System.DB
         // ----- Properties ----- //
         static int CurrentUserID { get; set; }
         static string UserName { get; set; }
-        static string Password { get; set; }
+        private static string Password { get; set; }
         static string UserLocation { get; set; }
 
         //"Login_History.txt"

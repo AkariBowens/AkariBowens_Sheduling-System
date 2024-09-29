@@ -10,6 +10,7 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace AkariBowens_Sheduling_System
         // Gets client system language setting
         private readonly string clientRegion = CultureInfo.CurrentCulture.Name;
         public static string userName { get; set; }
-        public static string userPass { get; set; }
+        private static string userPass { get; set; }
         public static int userID { get; set; }
 
         private void login_form_Load(object sender, EventArgs e)
@@ -72,92 +73,115 @@ namespace AkariBowens_Sheduling_System
             {
                 //string DBUser;
                 string DBPass;
+                if (userPass == "")
+                {
+                     Console.WriteLine("Password empty!");
+                     throw new AuthenticationException("Input a password!");
+                }
 
                 using (DBConnection.connect)
                 {
-                    // if this fails because no user, raise exception 
+                     
                     string searchString = $"SELECT userId, userName, password FROM user WHERE userName = '{userName}';";
                     MySqlCommand testPass = new MySqlCommand(searchString, DBConnection.connect);
                     DBConnection.OpenConnection();
+
                     using (MySqlDataReader dataReader = testPass.ExecuteReader())
                     {
+                        // If this fails because no user found, raises exception
                         if (dataReader.HasRows)
                         {
-                            // returns password and id of user Where userName == username_textBox.Text
+                            // Returns password and id of user Where userName == username_textBox.Text
                             while (dataReader.Read())
                             {
-                                
                                 //DBUser = Convert.ToString(dataReader["userName"]);
                                 //Console.WriteLine(DBUser + " user");
                                 
                                 DBPass = Convert.ToString(dataReader["password"]);
-                                Console.WriteLine(DBPass + " pass");
-                                
-                                userID = Convert.ToInt32(dataReader["userId"]);
-                                Console.WriteLine(userID + " user ID");
+                                //Console.WriteLine(DBPass + " pass");
+                                if (userPass != DBPass)
+                                {
+                                    Console.WriteLine("Password incorrect!");
+                                    throw new AuthenticationException("Password incorrect!");
+                                }
 
-                                
+                                userID = Convert.ToInt32(dataReader["userId"]);
+                                Console.WriteLine("User ID: " + userID );
                             }
                         }
                         else
                         {
-                            Console.WriteLine("No rows to read");
-                            
-                            // Use the lower one
                             Console.WriteLine("User not found");
-                            return false;
+                            throw new AuthenticationException("Username Incorrect!");
                         }
                     }
                 }
                 return true;
-            } catch (Exception exc)
+            } catch (Exception AuthenticationException)
             {
-                Console.WriteLine(exc.Message.ToString());
+                MessageBox.Show(AuthenticationException.Message.ToString());
                 return false;
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            // Password does not match and user not found
             if (GetUserAndPass())
             {
                 // Calls constructor updating the static CurrentUser class and logs adds the new login to the log
                 CurrentUser user = new CurrentUser(userID, userName, userPass, clientRegion);
                 CurrentUserViewForm CurrentUserView = new CurrentUserViewForm();
                 CurrentUserView.Show();
-            }
+            } 
         }
 
         private void username_textBox_TextChanged(object sender, EventArgs e)
         {
-            // Exception - Username not found
-            // Exception - If username or Password is incorrect
-    
-            if (string.IsNullOrWhiteSpace(username_textBox.Text))
-            {  
-                
-                MessageBox.Show(" -- UsrnmExc");
-                username_textBox.BackColor = Color.Tomato;
-            } else
+            try
             {
-                userName = username_textBox.Text;
-                LoginButton();
+                if(!string.IsNullOrWhiteSpace(username_textBox.Text))
+                {
+                    userName = username_textBox.Text;
+                    LoginButton();
+                } else
+                {
+                    throw new ArgumentException("Username must not be empty!");
+                }
+            } catch (Exception ArgumentException)
+            {
+                if (username_textBox.Text != "")
+                {
+                    MessageBox.Show(ArgumentException.Message.ToString());
+                }
+                username_textBox.BackColor = Color.Tomato;
+                username_textBox.Clear();
             }
         }
 
         private void password_textBox_TextChanged(object sender, EventArgs e)
         {
-
-            if (string.IsNullOrWhiteSpace(password_textBox.Text))
+            try
             {
-                MessageBox.Show(" -- PsswdExc");
-                username_textBox.BackColor = Color.Tomato;
-            }
-            else
+                if (!string.IsNullOrWhiteSpace(password_textBox.Text))
+                {
+                    userPass = password_textBox.Text;
+                    LoginButton();
+                } else if (password_textBox.Text == "")
+                {
+                    throw new ArgumentException("Input a passsword!");
+                } else
+                {
+                    throw new ArgumentException("Password must not be empty!");
+                }
+            } catch (Exception ArgumentException)
             {
-                userPass = username_textBox.Text;
-                LoginButton();
+                //if (password_textBox.Text != "")
+                //{
+                MessageBox.Show(ArgumentException.Message.ToString());
+                //}
+                password_textBox.BackColor = Color.Tomato;
+                password_textBox.Clear();    
             }
         }
 
