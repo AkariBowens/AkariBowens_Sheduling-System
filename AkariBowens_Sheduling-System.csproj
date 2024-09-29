@@ -104,11 +104,11 @@
     <Compile Include="CurrentUserViewForm.Designer.cs">
       <DependentUpon>CurrentUserViewForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DB\Appointments.cs" />
-    <Compile Include="DB\CurrentUser.cs" />
-    <Compile Include="DB\Customer.cs" />
+    <Compile Include="Classes\Appointments.cs" />
+    <Compile Include="Classes\CurrentUser.cs" />
+    <Compile Include="Classes\Customer.cs" />
     <Compile Include="DB\DBConnection.cs" />
-    <Compile Include="DB\User.cs" />
+    <Compile Include="Classes\User.cs" />
     <Compile Include="login_form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -145,6 +145,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Files\Login_History.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

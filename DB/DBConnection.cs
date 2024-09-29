@@ -31,7 +31,8 @@ namespace AkariBowens_Sheduling_System.DB
                 connect.Open();
 
                 // ----- Change later ----- //
-                MessageBox.Show("Connection is open");
+                //MessageBox.Show("Connection is open");
+                Console.WriteLine("Connection is open @...");
             }
             catch (MySqlException ex)
             {

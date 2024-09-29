@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
@@ -13,6 +14,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace AkariBowens_Sheduling_System
 {
@@ -23,20 +25,18 @@ namespace AkariBowens_Sheduling_System
             InitializeComponent();
         }
 
-        private readonly string clientLanguage = CultureInfo.CurrentCulture.Name;
-        private string userPass;
-        private string userName;
+        // Gets client system language setting
+        private readonly string clientRegion = CultureInfo.CurrentCulture.Name;
+        public static string userName { get; set; }
+        public static string userPass { get; set; }
+        public static int userID { get; set; }
 
         private void login_form_Load(object sender, EventArgs e)
         {
-            // Gets client system language setting
-            //string clientLanguage = CultureInfo.CurrentCulture.Name;
-            Console.WriteLine(clientLanguage);
-
-            //German
+            // German - Luxembourg
             // "de-Lu"
 
-            if (clientLanguage == "de-LU")
+            if (clientRegion == "de-LU")
             {
                 // Changes text on form to Deutsch(German)
                 login_label.Text = "Anmelden";
@@ -45,64 +45,85 @@ namespace AkariBowens_Sheduling_System
 
                 // Error messages for validations as well
             }
-            //else
-            //{
-            // Leaves it english otherwise
-            //login_label.Text = "Login";
-            //username_label.Text = "Username";
-            //password_label.Text = "Password";
-            //}
+
+
+            login_button.Enabled = false;
         }
 
-        private bool isValid = ValidateUser();
 
-        // Modify this
-        public static bool ValidateUser()
+        private void LoginButton()
         {
-            //bool isTrue = connect.CancelQueryAsync(sql);
-            string dBPass;
-            //string inputUser;
-            //string inputPass = password_textBox.Text;
+            if (textBoxesAreValid())
+            {
+                login_button.Enabled = true;
+            }
+        }
+        private bool textBoxesAreValid()
+        {
+            return ((!string.IsNullOrWhiteSpace(username_textBox.Text)) && (!string.IsNullOrWhiteSpace(password_textBox.Text)));
+        }
 
+
+        // make this async
+        public static bool GetUserAndPass()
+        {
+            // Redo exception-handling - needs to fail if password is incorrect
             try
             {
+                //string DBUser;
+                string DBPass;
+
                 using (DBConnection.connect)
                 {
-                    string searchString = $"SELECT username, password FROM user WHERE UserName =... ';";
+                    // if this fails because no user, raise exception 
+                    string searchString = $"SELECT userId, userName, password FROM user WHERE userName = '{userName}';";
                     MySqlCommand testPass = new MySqlCommand(searchString, DBConnection.connect);
-                    MySqlDataReader dataReader = testPass.ExecuteReader();
+                    DBConnection.OpenConnection();
+                    using (MySqlDataReader dataReader = testPass.ExecuteReader())
+                    {
+                        if (dataReader.HasRows)
+                        {
+                            // returns password and id of user Where userName == username_textBox.Text
+                            while (dataReader.Read())
+                            {
+                                
+                                //DBUser = Convert.ToString(dataReader["userName"]);
+                                //Console.WriteLine(DBUser + " user");
+                                
+                                DBPass = Convert.ToString(dataReader["password"]);
+                                Console.WriteLine(DBPass + " pass");
+                                
+                                userID = Convert.ToInt32(dataReader["userId"]);
+                                Console.WriteLine(userID + " user ID");
 
-                    Console.WriteLine(dataReader);
-                    dBPass = dataReader.ToString();
-                    Console.WriteLine(dBPass);
+                                
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("No rows to read");
+                            
+                            // Use the lower one
+                            Console.WriteLine("User not found");
+                            return false;
+                        }
+                    }
                 }
                 return true;
-                // If (text of usrnm & txt of pass are valid - change isValid to true
-
-            }
-            catch (Exception ex)
+            } catch (Exception exc)
             {
-                Console.WriteLine(ex.Message.ToString());
+                Console.WriteLine(exc.Message.ToString());
                 return false;
-
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // Change this to run test if user is validated after running ValidateUser() - then open new form
-            ValidateUser();
 
-            if (isValid)
+            if (GetUserAndPass())
             {
-                // login currentUser
-                // -- this should update the static class
-
-                // then it should open a new form filled with the data from the currentUser
-
-                // Calls constructor and the constructor logs the new login
-                //CurrentUser(ID, Name, password, location);
-
+                // Calls constructor updating the static CurrentUser class and logs adds the new login to the log
+                CurrentUser user = new CurrentUser(userID, userName, userPass, clientRegion);
                 CurrentUserViewForm CurrentUserView = new CurrentUserViewForm();
                 CurrentUserView.Show();
             }
@@ -112,48 +133,31 @@ namespace AkariBowens_Sheduling_System
         {
             // Exception - Username not found
             // Exception - If username or Password is incorrect
-            try
-            {
-                // Change to (if usernametxt in DB, then trigger a function that tests whether U&P bot fit criteria)
-                // Remove usrnmtxbx check
-                if (!string.IsNullOrWhiteSpace(username_textBox.Text) && username_textBox.Text == "test")
-                {
-                    //compares username to one in db
-                    //testUsernameInDB(username_textBox.Text) - returns true or false
-                    //field is false
-                    // run
-                    userName = username_textBox.Text;
-                    ValidateUser();
-                }
-            } catch (Exception exc)
-            {
-                MessageBox.Show(exc.Message);
+    
+            if (string.IsNullOrWhiteSpace(username_textBox.Text))
+            {  
+                
+                MessageBox.Show(" -- UsrnmExc");
                 username_textBox.BackColor = Color.Tomato;
+            } else
+            {
+                userName = username_textBox.Text;
+                LoginButton();
             }
         }
 
         private void password_textBox_TextChanged(object sender, EventArgs e)
         {
-            try
-            {
-                // Change to (if usernametxt in DB, then trigger a function that tests whether U&P bot fit criteria)
-                // Remove upsswrdtxbx check
-                if (!string.IsNullOrWhiteSpace(password_textBox.Text) && password_textBox.Text == "test")
-                {
-                    
-                    //testUsernameInDB(username_textBox.Text) - returns true or false
-                    //field is false
-                    
-                    userPass = username_textBox.Text;
-                    ValidateUser();
-                }
 
-            }
-            catch (Exception exc)
+            if (string.IsNullOrWhiteSpace(password_textBox.Text))
             {
-                MessageBox.Show(exc.Message);
+                MessageBox.Show(" -- PsswdExc");
                 username_textBox.BackColor = Color.Tomato;
-
+            }
+            else
+            {
+                userPass = username_textBox.Text;
+                LoginButton();
             }
         }
 
