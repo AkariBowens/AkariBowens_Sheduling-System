@@ -27,10 +27,12 @@ namespace AkariBowens_Sheduling_System
         }
 
         // Gets client system language setting
-        private readonly string clientRegion = CultureInfo.CurrentCulture.Name;
+        private readonly static string clientRegion = CultureInfo.CurrentCulture.Name;
         public static string userName { get; set; }
         private static string userPass { get; set; }
         public static int userID { get; set; }
+
+        private static string ExceptionMessage;
 
         private void login_form_Load(object sender, EventArgs e)
         {
@@ -46,7 +48,6 @@ namespace AkariBowens_Sheduling_System
 
                 // Error messages for validations as well
             }
-
 
             login_button.Enabled = false;
         }
@@ -68,15 +69,22 @@ namespace AkariBowens_Sheduling_System
         // make this async
         public static bool GetUserAndPass()
         {
-            // Redo exception-handling - needs to fail if password is incorrect
+            
             try
             {
                 //string DBUser;
                 string DBPass;
+
+                
+                
+
                 if (userPass == "")
                 {
-                     Console.WriteLine("Password empty!");
-                     throw new AuthenticationException("Input a password!");
+                    // Tests clientRegion for Luxembourg, returns in Deutsch or English
+                    ExceptionMessage = (clientRegion == "de-LU") ? "Geben Sie ein Passwort ein!" : "Input a password!";
+                    
+                    Console.WriteLine("Attempted login without password");
+                    throw new AuthenticationException(ExceptionMessage);
                 }
 
                 using (DBConnection.connect)
@@ -101,8 +109,9 @@ namespace AkariBowens_Sheduling_System
                                 //Console.WriteLine(DBPass + " pass");
                                 if (userPass != DBPass)
                                 {
+                                    ExceptionMessage = (clientRegion == "de-LU") ? "Passwort falsch!" : "Password incorrect!";
                                     Console.WriteLine("Password incorrect!");
-                                    throw new AuthenticationException("Password incorrect!");
+                                    throw new AuthenticationException(ExceptionMessage);
                                 }
 
                                 userID = Convert.ToInt32(dataReader["userId"]);
@@ -111,8 +120,9 @@ namespace AkariBowens_Sheduling_System
                         }
                         else
                         {
+                            ExceptionMessage = (clientRegion == "de-LU") ? "Benutzername falsch!" : "Username Incorrect!";
                             Console.WriteLine("User not found");
-                            throw new AuthenticationException("Username Incorrect!");
+                            throw new AuthenticationException(ExceptionMessage);
                         }
                     }
                 }
@@ -146,7 +156,8 @@ namespace AkariBowens_Sheduling_System
                     LoginButton();
                 } else
                 {
-                    throw new ArgumentException("Username must not be empty!");
+                    ExceptionMessage = (clientRegion == "de-LU") ? "Benutzername darf nicht leer sein!" : "Username must not be empty!";
+                    throw new ArgumentException(ExceptionMessage);
                 }
             } catch (Exception ArgumentException)
             {
@@ -169,10 +180,12 @@ namespace AkariBowens_Sheduling_System
                     LoginButton();
                 } else if (password_textBox.Text == "")
                 {
-                    throw new ArgumentException("Input a passsword!");
+                    ExceptionMessage = (clientRegion == "de-LU") ? "Geben Sie ein Passwort ein!" : "Input a passsword!";
+                    throw new ArgumentException(ExceptionMessage);
                 } else
                 {
-                    throw new ArgumentException("Password must not be empty!");
+                    ExceptionMessage = (clientRegion == "de-LU") ? "Passwort darf nicht leer sein!" : "Password must not be empty!";
+                    throw new ArgumentException(ExceptionMessage);
                 }
             } catch (Exception ArgumentException)
             {
