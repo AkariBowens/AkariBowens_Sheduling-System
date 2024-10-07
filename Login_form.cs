@@ -141,6 +141,8 @@ namespace AkariBowens_Sheduling_System
             {
                 // Calls constructor updating the static CurrentUser class and logs adds the new login to the log
                 CurrentUser user = new CurrentUser(userID, userName, userPass, clientRegion);
+
+                // Creates and opens a new Current-User View Form w/ Appointments and Customers
                 CurrentUserViewForm CurrentUserView = new CurrentUserViewForm();
                 CurrentUserView.Show();
             } 
@@ -178,21 +180,22 @@ namespace AkariBowens_Sheduling_System
                 {
                     userPass = password_textBox.Text;
                     LoginButton();
-                } else if (password_textBox.Text == "")
-                {
-                    ExceptionMessage = (clientRegion == "de-LU") ? "Geben Sie ein Passwort ein!" : "Input a passsword!";
-                    throw new ArgumentException(ExceptionMessage);
-                } else
+                } else 
+                //if (password_textBox.Text == "")
+                //{
+                //    ExceptionMessage = (clientRegion == "de-LU") ? "Geben Sie ein Passwort ein!" : "Input a passsword!";
+                //    throw new ArgumentException(ExceptionMessage);
+                //} else
                 {
                     ExceptionMessage = (clientRegion == "de-LU") ? "Passwort darf nicht leer sein!" : "Password must not be empty!";
                     throw new ArgumentException(ExceptionMessage);
                 }
             } catch (Exception ArgumentException)
             {
-                //if (password_textBox.Text != "")
-                //{
-                MessageBox.Show(ArgumentException.Message.ToString());
-                //}
+                if (password_textBox.Text == "")
+                {
+                    MessageBox.Show(ArgumentException.Message.ToString());
+                }
                 password_textBox.BackColor = Color.Tomato;
                 password_textBox.Clear();    
             }
