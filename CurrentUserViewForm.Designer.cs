@@ -31,16 +31,16 @@
             this.close_button = new System.Windows.Forms.Button();
             this.appts_label = new System.Windows.Forms.Label();
             this.customers_label = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.AppointmentDGV = new System.Windows.Forms.DataGridView();
+            this.CustomerDGV = new System.Windows.Forms.DataGridView();
             this.customers_delete_button = new System.Windows.Forms.Button();
             this.customers_update_button = new System.Windows.Forms.Button();
             this.customers_add_button = new System.Windows.Forms.Button();
             this.appts_add_button = new System.Windows.Forms.Button();
             this.appts_update_button = new System.Windows.Forms.Button();
             this.appts_delete_button = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AppointmentDGV)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CustomerDGV)).BeginInit();
             this.SuspendLayout();
             // 
             // close_button
@@ -74,21 +74,22 @@
             this.customers_label.TabIndex = 2;
             this.customers_label.Text = "Customers";
             // 
-            // dataGridView1
+            // AppointmentDGV
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(569, 111);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(463, 136);
-            this.dataGridView1.TabIndex = 3;
+            this.AppointmentDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.AppointmentDGV.Location = new System.Drawing.Point(569, 111);
+            this.AppointmentDGV.Name = "AppointmentDGV";
+            this.AppointmentDGV.Size = new System.Drawing.Size(463, 136);
+            this.AppointmentDGV.TabIndex = 3;
             // 
-            // dataGridView2
+            // CustomerDGV
             // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(72, 111);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(463, 136);
-            this.dataGridView2.TabIndex = 4;
+            this.CustomerDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.CustomerDGV.Location = new System.Drawing.Point(72, 111);
+            this.CustomerDGV.Name = "CustomerDGV";
+            this.CustomerDGV.Size = new System.Drawing.Size(463, 136);
+            this.CustomerDGV.TabIndex = 4;
+            this.CustomerDGV.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.CustomerDGV_DataBindingComplete);
             // 
             // customers_delete_button
             // 
@@ -164,15 +165,16 @@
             this.Controls.Add(this.customers_add_button);
             this.Controls.Add(this.customers_update_button);
             this.Controls.Add(this.customers_delete_button);
-            this.Controls.Add(this.dataGridView2);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.CustomerDGV);
+            this.Controls.Add(this.AppointmentDGV);
             this.Controls.Add(this.customers_label);
             this.Controls.Add(this.appts_label);
             this.Controls.Add(this.close_button);
             this.Name = "CurrentUserViewForm";
             this.Text = "CurrentUserViewForm";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            this.Load += new System.EventHandler(this.CurrentUserViewForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.AppointmentDGV)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CustomerDGV)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,8 +185,8 @@
         private System.Windows.Forms.Button close_button;
         private System.Windows.Forms.Label appts_label;
         private System.Windows.Forms.Label customers_label;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.DataGridView AppointmentDGV;
+        private System.Windows.Forms.DataGridView CustomerDGV;
         private System.Windows.Forms.Button customers_delete_button;
         private System.Windows.Forms.Button customers_update_button;
         private System.Windows.Forms.Button customers_add_button;

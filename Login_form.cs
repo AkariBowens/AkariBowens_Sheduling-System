@@ -75,9 +75,6 @@ namespace AkariBowens_Sheduling_System
                 //string DBUser;
                 string DBPass;
 
-                
-                
-
                 if (userPass == "")
                 {
                     // Tests clientRegion for Luxembourg, returns in Deutsch or English
@@ -142,10 +139,13 @@ namespace AkariBowens_Sheduling_System
                 // Calls constructor updating the static CurrentUser class and logs adds the new login to the log
                 CurrentUser user = new CurrentUser(userID, userName, userPass, clientRegion);
 
+                Hide();
                 // Creates and opens a new Current-User View Form w/ Appointments and Customers
                 CurrentUserViewForm CurrentUserView = new CurrentUserViewForm();
                 CurrentUserView.Show();
-            } 
+
+            }
+            
         }
 
         private void username_textBox_TextChanged(object sender, EventArgs e)

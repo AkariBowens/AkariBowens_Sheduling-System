@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AkariBowens_Sheduling_System.DB
 {
-    internal class Appointments
+    internal class Appointment
     {
         // ----- Methods ----- //
         public int ApptID { get; set; }
@@ -20,6 +20,8 @@ namespace AkariBowens_Sheduling_System.DB
 
         public string ApptType { get; set; }
         public string URL { get; set; }
+
+        // Hard code all the properties below - except LastUpdate()
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public DateTime CreateDate { get; set; }
@@ -34,5 +36,16 @@ namespace AkariBowens_Sheduling_System.DB
         // ----- Properties ----- //
         // AddAppt()
         // RemoveAppt()
+
+        // ----- Constructor ----- //
+
+
+        // ----- Static Class ----- //
+
+        // Fits better in CurrentUser
+        static Appointment()
+        {
+
+        }
     }
 }

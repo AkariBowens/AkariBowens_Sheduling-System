@@ -2,6 +2,7 @@
 using MySqlX.XDevAPI.CRUD;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -24,7 +25,7 @@ namespace AkariBowens_Sheduling_System.DB
         private static string LogFilePath { get; set; } = "C:\\Users\\LabUser\\source\\repos\\AkariBowens_Sheduling-System\\Files\\Login_History.txt";
 
         // ----- File Properties ----- //
-        private static FileStream fileWriter; 
+        private static FileStream fileWriter;
         private static FileStream fileReader;
 
         // ----- Methods ----- //
@@ -34,14 +35,14 @@ namespace AkariBowens_Sheduling_System.DB
         {
 
             DateTime currentTime = DateTime.Now;
-            
+
             string logString = $"Logged in {UserName} @{currentTime} in {UserLocation}\n ";
             //Console.WriteLine(logString + " -- Console.Write");
 
             string data;
-         
+
             fileWriter = new FileStream(LogFilePath, FileMode.Append, FileAccess.Write);
-            
+
             // Encodes logString 
             byte[] buffer = Encoding.UTF8.GetBytes(logString);
             fileWriter.Write(buffer, 0, buffer.Length);
@@ -87,10 +88,14 @@ namespace AkariBowens_Sheduling_System.DB
         }
 
         // ----- Static Class ----- //
-        static CurrentUser()
-        {
-            // Call LogLastLogin - NOW() at the time this class is instantiated, pass it back to db? and logfile
-        }
+        
+
+        public static BindingList<Appointment> Appointments { get; set; } = new BindingList<Appointment>() 
+        { 
+            // SQL Query here
+        };
+
+       // list of customers as well?
 
     }
 }
