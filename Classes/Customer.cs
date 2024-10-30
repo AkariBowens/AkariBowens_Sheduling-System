@@ -1,12 +1,16 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using AkariBowens_Sheduling_System.Classes;
+using Google.Protobuf.WellKnownTypes;
 using MySql.Data.MySqlClient;
 using Mysqlx.Crud;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace AkariBowens_Sheduling_System.DB
 {
@@ -16,8 +20,7 @@ namespace AkariBowens_Sheduling_System.DB
         public int CustomerID { get; set; }
         public string CustomerName { get; set; }
         public string AddressID { get; set; }
-
-        public string Contact { get; set; }
+        
 
         // Cast as bool
         public int Active { get; set; }
@@ -33,54 +36,45 @@ namespace AkariBowens_Sheduling_System.DB
 
         public static Customer SelectedCustomer { get; set; }
 
-        public static int GlobalCustomerID { get; set; } = 50;
+        // not needed
+        //public static int GlobalCustomerID { get; set; } = 50;
 
         // List of args
         private List<string> ArgsList { get; set; }
 
         // ----- Methods ----- //
-        public static bool AddCustomer(Customer newCust) 
+        public static bool AddCustomer(Customer newCust, Address newAddr) 
         {
+            // if addressid == -1..Create else..
+            // ----- just add everything new ----- //
+            // new customer, new address, keep city and country the hard-coded
             try
             {
+                // Initializes new 'Customer' instance
+                Customer newCustomer = newCust;
 
-                // when in SQL return based on if the operation was succesful
-                int CustomerCount;
+                // Initializes new 'Address' instance
+                Address address = newAddr;
+   
+                MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["localdb"].ConnectionString);
 
-                using (DBConnection.connect)
-                {
-                    // Returns current row count of customer table
-                    string ReadRows = $"SELECT COUNT(customerName) FROM customer GROUP BY customerId;";
-                    MySqlCommand customerCount = new MySqlCommand(ReadRows, DBConnection.connect);
+                DBConnection.OpenConnection();
 
-                    Console.WriteLine(newCust.CreateDate.ToString(dateFormat));
-                    
-                    // loop argsList? - map function + '*here*'
-                    string SQLInsertString = $"INSERT INTO customer VALUES('{newCust.CustomerID}', '{newCust.CustomerName}', '{newCust.AddressID}', '{newCust.Active}', '{ newCust.CreateDate.ToString(dateFormat)}', '{newCust.CreatedBy}', '{newCust.LastUpdate.ToString(dateFormat)}', '{newCust.LastUpdatedBy}');";
-                    MySqlCommand addCustomer = new MySqlCommand(SQLInsertString, DBConnection.connect);
+                // -- Add On -- //
+                // Do address ID logic
+                string customerInsertstring = $"INSERT INTO customer(customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdatedBy) VALUES({newCust.CustomerName}, {newCust.AddressID}, {newCust.Active}, {newCust.CreateDate}, {newCust.CreatedBy}, {newCust.LastUpdate}, {newCust.LastUpdatedBy});";
+                
+                MySqlCommand insertCustomer = new MySqlCommand(customerInsertstring, connection);
 
-                    DBConnection.OpenConnection();
-
-                    int InitialCustomerCount = Convert.ToInt32(customerCount.ExecuteScalar().ToString());
-                    Console.WriteLine(InitialCustomerCount + " --Beginning count");
-                    addCustomer.ExecuteNonQuery();
-
-                    // reconfigure later
-                    customerCount = new MySqlCommand(ReadRows, DBConnection.connect);
-                    CustomerCount = Convert.ToInt32(customerCount.ExecuteScalar().ToString());
-                    Console.WriteLine(CustomerCount + " --Ending count");
-
-                    if (InitialCustomerCount < CustomerCount)
-                    {
-                        throw new ArgumentException("Insert unsuccessful.");
-                        //return false;
-                    }
+                // if this returns -1... run error
+                if (insertCustomer.ExecuteNonQuery() == -1)
+                { 
+                    Console.WriteLine($"Added new customer {newCust.CustomerName}");
+                    throw new Exception("Insert Failed!");
                 }
                 
-                Console.WriteLine($"Added new customer {newCust.CustomerName}");
-
                 return true;
-
+                
             } catch (Exception ArgumentException)
             {
                 Console.WriteLine(ArgumentException.Message.ToString());
@@ -93,35 +87,59 @@ namespace AkariBowens_Sheduling_System.DB
         {
             try
             {
-                string deleteString = $"DELETE FROM customer WHERE customerId = {custId};";
-                MySqlCommand deleteCustomerCommand = new MySqlCommand(deleteString, DBConnection.connect);
+                // -- Only for testing -- //
+                //custId = 50;
 
-                deleteCustomerCommand.ExecuteNonQuery();
-                //if ()
-                //{
+                int inputCustID = custId;
+                //int result;
+                Console.WriteLine(custId + " -- custId");
+                Console.WriteLine(inputCustID + " -- inputCustID");
+
+                MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["localdb"].ConnectionString);
+
+                DBConnection.OpenConnection();
+                using (connection)
+                { 
+
+                    string deleteString = $"DELETE FROM customer WHERE customerId = {inputCustID};";
+
+                    MySqlCommand deleteCustomer = new MySqlCommand(deleteString, DBConnection.connect);
+                    DBConnection.OpenConnection();
+
+                    //result = Convert.ToInt32(
+                    deleteCustomer.ExecuteNonQuery();
+                }
+
+                //DBConnection.CloseConnection();
+
+                //Console.WriteLine(result);
                 return true;
-                //}
+               
             }
-            catch
+            catch (Exception exc)
             {
+                Console.WriteLine(exc.Message.ToString() + "-- deletion error!");
+
                 return false;
             }
         }
+        
         // public static UpdateCustomer(){}
 
         // Reads list of arguments
 
             // ----- Constructor ----- //
-        public Customer( string custName, string custAddr, string contact) 
+        public Customer( string custName, string custAddr) 
         {
-            CustomerID = GlobalCustomerID++;
             CustomerName = custName;
-            AddressID = custAddr;
+
+            // Define address id later
+            AddressID = Convert.ToString(Address.FindAddressId(custAddr));
+            
             // if (active.ToLower() = "false") { Active = 0 } elif (active.ToLower() == "true") { Active = 1 }
-            Contact = contact;
+   
             Active = 1;
-            //DateTime formattedDate;
-            //DateTime.TryParse(DateTime.Now.ToString(dateFormat), out formattedDate);
+
             CreateDate = DateTime.Now;
             Console.WriteLine(CreateDate);
             

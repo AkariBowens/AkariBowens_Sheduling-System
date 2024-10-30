@@ -17,7 +17,7 @@ namespace AkariBowens_Sheduling_System.DB
     public class DBConnection
     {
         // Makes connection
-        public static MySqlConnection connect { get; set; }
+        public static MySqlConnection connect { get; set; } 
 
         public static void OpenConnection()
         {

@@ -11,8 +11,8 @@ namespace AkariBowens_Sheduling_System.DB
     {
         // ----- Methods ----- //
         public int ApptID { get; set; }
-        public string CustID { get; set; }
-        public string UserID { get; set; }
+        public int CustID { get; set; }
+        public int UserID { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Location { get; set; }
@@ -21,25 +21,58 @@ namespace AkariBowens_Sheduling_System.DB
         public string ApptType { get; set; }
         public string URL { get; set; }
 
-        // Hard code all the properties below - except LastUpdate()
+        
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+
+        // Hard code all the properties below - except LastUpdate()
         public DateTime CreateDate { get; set; }
         // Hard-code this
         public string CreatedBy { get; set; }
         // is TIMESTAMP() - numbers
-        public Timestamp LastUpdate { get; set; }
+        public DateTime LastUpdate { get; set; }
         // Hard-code this
         public string LastUpdatedBy { get; set; }
 
 
         // ----- Properties ----- //
-        // AddAppt()
+        public static bool AddAppointment(Appointment appt)
+        {
+            
+            
+            return true;
+        }
         // RemoveAppt()
 
         // ----- Constructor ----- //
 
+        public Appointment()
+        {
+            // Get from constructor?
+            ApptID = -1;
+            CustID = -1;
+            UserID = CurrentUser.CurrentUserID;
 
+            Title = "";
+            Description = "";
+            Location = CurrentUser.UserLocation;
+
+            // Get from user input
+            Contact = "";
+            ApptType = "";
+            URL = "";
+
+            // Get from constructor
+            StartTime =  new DateTime(12, 0, 0);
+            EndTime = new DateTime(1, 0, 0);
+            
+            CreateDate = DateTime.Now;
+            Console.WriteLine(CreateDate);
+
+            CreatedBy = "Admin";
+            LastUpdate = DateTime.Now;
+            LastUpdatedBy = "Admin";
+        }
         // ----- Static Class ----- //
 
         // Fits better in CurrentUser

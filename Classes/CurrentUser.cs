@@ -1,8 +1,10 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI.CRUD;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -16,10 +18,10 @@ namespace AkariBowens_Sheduling_System.DB
     internal class CurrentUser
     {
         // ----- Properties ----- //
-        static int CurrentUserID { get; set; }
-        static string UserName { get; set; }
+        public static int CurrentUserID { get; set; }
+        public static string UserName { get; set; }
         private static string Password { get; set; }
-        static string UserLocation { get; set; }
+        public static string UserLocation { get; set; }
 
         //"Login_History.txt"
         private static string LogFilePath { get; set; } = "C:\\Users\\LabUser\\source\\repos\\AkariBowens_Sheduling-System\\Files\\Login_History.txt";
@@ -66,14 +68,6 @@ namespace AkariBowens_Sheduling_System.DB
             // 
         }
 
-        // Login method? - CurrentUser.Login() - called in constructor(sets * static currentUser class)
-
-        // Maybe put appointments here instead
-
-        // This only needs to be here because I am only grabbing appointmetns for this user
-        // public GrabAppointments() - $"Select * FROM appointments WHERE userId = {CurrentUserID}"
-
-
         // ----- Constructor ----- //
         public CurrentUser(int currentID, string username, string pass, string location)
         {
@@ -82,20 +76,70 @@ namespace AkariBowens_Sheduling_System.DB
             Password = pass;
             UserLocation = location;
             LogLastLogin();
-            Console.WriteLine($"CurrentUser - {CurrentUser.CurrentUserID}");
-
-            // update {userId.lastUpdate}
+            Console.WriteLine($"CurrentUser - {CurrentUserID}");
         }
 
         // ----- Static Class ----- //
-        
 
-        public static BindingList<Appointment> Appointments { get; set; } = new BindingList<Appointment>() 
-        { 
-            // SQL Query here
-        };
+        public static DataTable GetAppointments()
+        {
 
-       // list of customers as well?
+            DataTable AppointmentList;
 
+            string allAppointmentsQuery = $"SELECT appointmentId, customerId, userId, type FROM appointment WHERE userId = {CurrentUserID};";
+            MySqlCommand apptsQuery = new MySqlCommand(allAppointmentsQuery, DBConnection.connect);
+            DBConnection.OpenConnection();
+            using (DBConnection.connect)
+            {
+                MySqlDataAdapter dataAdapter = new MySqlDataAdapter(allAppointmentsQuery, DBConnection.connect);
+                AppointmentList = new DataTable();
+
+                dataAdapter.Fill(AppointmentList);
+            }
+
+            return AppointmentList;
+
+        }
+
+        public static DataTable GetCustomers()
+        {
+
+            DataTable CustomerList;
+
+            // Rewrite this to return address, city, country instead of addressId & where appointmentId is the source of the customer
+            //string allCustomersQuery = $"SELECT customerId, customerName, address, city, country FROM customer INNER JOIN address ON customer.addressId = address.addressId INNER JOIN address INNER JOIN city ON address.cityId = city.cityId INNER JOIN country ON city.countryId = country.countryId;"
+           
+            string allCustomersQuery = $"SELECT customerId, customerName, addressId FROM customer;";
+            //$"WHERE userId = {CurrentUserID};";
+            MySqlCommand customersQuery = new MySqlCommand(allCustomersQuery, DBConnection.connect);
+            DBConnection.OpenConnection();
+            using (DBConnection.connect)
+            {
+                MySqlDataAdapter dataAdapter = new MySqlDataAdapter(allCustomersQuery, DBConnection.connect);
+                CustomerList = new DataTable();
+
+                dataAdapter.Fill(CustomerList);
+            }
+
+            return CustomerList;
+        }
+
+        public static DataTable Appointments { get { GetAppointments(); return Appointments; } set { GetAppointments(); } }
+        public static DataTable Customers
+        {
+            get { GetCustomers(); return Customers; }
+            set { GetCustomers(); }
+
+            //{ 
+            // SQL Query result here
+
+            // - add all to an sql query class... i.e. GetCustomers(), GetAppointments(), DeleteCustomer(), DeleteAppointment() or.. DeleteCommand(var customer/appointment, int selectedId){sql query string with 2 input options}
+            // allAppointmentsQuery = $"SELECT * FROM Appointments WHERE userId = {CurrentUserID};";
+            //MySqlCommand apptsQuery = new MySqlCommand()    
+            //};
+
+           
+
+        }
     }
 }

@@ -81,6 +81,8 @@
             this.AppointmentDGV.Name = "AppointmentDGV";
             this.AppointmentDGV.Size = new System.Drawing.Size(463, 136);
             this.AppointmentDGV.TabIndex = 3;
+            this.AppointmentDGV.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AppointmentDGV_CellContentClick);
+            this.AppointmentDGV.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.AppointmentDGV_DataBindingComplete);
             // 
             // CustomerDGV
             // 
@@ -89,6 +91,7 @@
             this.CustomerDGV.Name = "CustomerDGV";
             this.CustomerDGV.Size = new System.Drawing.Size(463, 136);
             this.CustomerDGV.TabIndex = 4;
+            this.CustomerDGV.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomerDGV_CellContentClick);
             this.CustomerDGV.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.CustomerDGV_DataBindingComplete);
             // 
             // customers_delete_button
@@ -133,6 +136,7 @@
             this.appts_add_button.TabIndex = 10;
             this.appts_add_button.Text = "Add";
             this.appts_add_button.UseVisualStyleBackColor = true;
+            this.appts_add_button.Click += new System.EventHandler(this.appts_add_button_Click);
             // 
             // appts_update_button
             // 

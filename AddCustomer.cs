@@ -1,5 +1,8 @@
-﻿using AkariBowens_Sheduling_System.DB;
+﻿using AkariBowens_Sheduling_System.Classes;
+using AkariBowens_Sheduling_System.DB;
 using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -42,19 +45,29 @@ namespace AkariBowens_Sheduling_System
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(phone_textBox.Text))
+                if (string.IsNullOrWhiteSpace(phone_textBox.Text))
                 {
-                    AddCustomerPhone = phone_textBox.Text;
-                    ToggleSave();
+                    throw new ArgumentException("Phone number cannot be empty!");
                 }
-                else
+
+                // test if it only contains dashes or dashes
+                foreach (char item in phone_textBox.Text)
                 {
-                    throw new ArgumentException("tb1");
+                    if ((item > '0' || item < '9') || item == (char)45)
+                    {
+                        continue;
+                    }else
+                    {
+                        throw new ArgumentException("Phone can only contain numbers or hypens!");
+                    }
+
                 }
+                AddCustomerPhone = phone_textBox.Text.Trim();
+                ToggleSave();
             }
             catch (Exception ArgumentException)
             {
-                if (phone_textBox.Text == "")
+                if (phone_textBox.Text != "")
                 {
                     MessageBox.Show(ArgumentException.Message.ToString());
                 }
@@ -70,7 +83,7 @@ namespace AkariBowens_Sheduling_System
             {
                 if (!string.IsNullOrWhiteSpace(name_textBox.Text)) 
                 {
-                    AddCustomerName = name_textBox.Text;
+                    AddCustomerName = name_textBox.Text.Trim();
                     ToggleSave();
                 } else
                 {
@@ -80,7 +93,7 @@ namespace AkariBowens_Sheduling_System
             } 
             catch (Exception ArgumentException)
             {
-                if (name_textBox.Text == "")
+                if (name_textBox.Text != "")
                 {
                     MessageBox.Show(ArgumentException.Message.ToString());
                 }
@@ -96,18 +109,20 @@ namespace AkariBowens_Sheduling_System
             {
                 if (!string.IsNullOrWhiteSpace(address_textBox.Text))
                 {
-                    AddCustomerAddress = address_textBox.Text;
+
+                    //Runs only after formatting
+                    AddCustomerAddress = address_textBox.Text.Trim();
                     ToggleSave();
                 }
                 else
                 {
 
-                    throw new ArgumentException("tb3");
+                    throw new ArgumentException("Address cannot be empty!");
                 }
             }
             catch (Exception ArgumentException)
             {
-                if (address_textBox.Text == "")
+                if (address_textBox.Text != "")
                 {
                     MessageBox.Show(ArgumentException.Message.ToString());
                 }
@@ -144,8 +159,8 @@ namespace AkariBowens_Sheduling_System
 
                 // -- Prefills textboxes -- //
                 name_textBox.Text = Customer.SelectedCustomer.CustomerName;
-                address_textBox.Text = Customer.SelectedCustomer.AddressID;
-                phone_textBox.Text = Customer.SelectedCustomer.Contact.ToString();
+                address_textBox.Text = Customer.SelectedCustomer.AddressID.ToString();
+                phone_textBox.Text = Address.SelectedAddress.Phone;
             }
 
             // Changes after input detected in all 3 fields
@@ -160,10 +175,13 @@ namespace AkariBowens_Sheduling_System
         private void save_button_Click(object sender, EventArgs e)
         {
             
-            // Customer NewCustomer = new Customer(AddCustomerName, AddCustomerAddress, AddCustomerPhone);
-            if (Customer.AddCustomer(new Customer(AddCustomerName, AddCustomerAddress, AddCustomerPhone)))
+            Customer NewCustomer = new Customer(AddCustomerName, AddCustomerAddress);
+           
+            if (Customer.AddCustomer(new Customer(AddCustomerName, AddCustomerAddress), new Address(AddCustomerAddress
+                , AddCustomerPhone)))
             {
                 Console.WriteLine("Save successful");
+                
                 Close();
             } else
             {
@@ -171,5 +189,7 @@ namespace AkariBowens_Sheduling_System
                 MessageBox.Show("Save unsuccessful. Try again.");
             }
         }
+
+        
     }
 }
