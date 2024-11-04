@@ -33,28 +33,29 @@
             this.end_label = new System.Windows.Forms.Label();
             this.start_label = new System.Windows.Forms.Label();
             this.ApptType_label = new System.Windows.Forms.Label();
-            this.end_textBox = new System.Windows.Forms.TextBox();
             this.variable_text_label = new System.Windows.Forms.Label();
-            this.start_textBox = new System.Windows.Forms.TextBox();
             this.ApptType_textBox = new System.Windows.Forms.TextBox();
             this.Customer_label = new System.Windows.Forms.Label();
             this.Customer_textBox = new System.Windows.Forms.TextBox();
+            this.Start_DateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.End_DateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
             // 
             // save_button
             // 
             this.save_button.Font = new System.Drawing.Font("Gadugi", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.save_button.Location = new System.Drawing.Point(60, 329);
+            this.save_button.Location = new System.Drawing.Point(60, 393);
             this.save_button.Name = "save_button";
             this.save_button.Size = new System.Drawing.Size(88, 45);
             this.save_button.TabIndex = 17;
             this.save_button.Text = "Save";
             this.save_button.UseVisualStyleBackColor = true;
+            this.save_button.Click += new System.EventHandler(this.save_button_Click);
             // 
             // cancel_button
             // 
             this.cancel_button.Font = new System.Drawing.Font("Gadugi", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cancel_button.Location = new System.Drawing.Point(183, 329);
+            this.cancel_button.Location = new System.Drawing.Point(183, 393);
             this.cancel_button.Name = "cancel_button";
             this.cancel_button.Size = new System.Drawing.Size(88, 45);
             this.cancel_button.TabIndex = 16;
@@ -66,7 +67,7 @@
             // 
             this.end_label.AutoSize = true;
             this.end_label.Font = new System.Drawing.Font("Gadugi", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.end_label.Location = new System.Drawing.Point(179, 176);
+            this.end_label.Location = new System.Drawing.Point(72, 229);
             this.end_label.Name = "end_label";
             this.end_label.Size = new System.Drawing.Size(61, 16);
             this.end_label.TabIndex = 15;
@@ -76,28 +77,22 @@
             // 
             this.start_label.AutoSize = true;
             this.start_label.Font = new System.Drawing.Font("Gadugi", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.start_label.Location = new System.Drawing.Point(69, 176);
+            this.start_label.Location = new System.Drawing.Point(72, 170);
             this.start_label.Name = "start_label";
             this.start_label.Size = new System.Drawing.Size(66, 16);
             this.start_label.TabIndex = 14;
             this.start_label.Text = "Start Time";
+            this.start_label.Click += new System.EventHandler(this.start_label_Click);
             // 
             // ApptType_label
             // 
             this.ApptType_label.AutoSize = true;
             this.ApptType_label.Font = new System.Drawing.Font("Gadugi", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ApptType_label.Location = new System.Drawing.Point(69, 111);
+            this.ApptType_label.Location = new System.Drawing.Point(72, 111);
             this.ApptType_label.Name = "ApptType_label";
             this.ApptType_label.Size = new System.Drawing.Size(35, 16);
             this.ApptType_label.TabIndex = 13;
             this.ApptType_label.Text = "Type";
-            // 
-            // end_textBox
-            // 
-            this.end_textBox.Location = new System.Drawing.Point(182, 195);
-            this.end_textBox.Name = "end_textBox";
-            this.end_textBox.Size = new System.Drawing.Size(76, 20);
-            this.end_textBox.TabIndex = 12;
             // 
             // variable_text_label
             // 
@@ -108,14 +103,6 @@
             this.variable_text_label.Size = new System.Drawing.Size(144, 25);
             this.variable_text_label.TabIndex = 11;
             this.variable_text_label.Text = "Appointment";
-            // 
-            // start_textBox
-            // 
-            this.start_textBox.Location = new System.Drawing.Point(72, 195);
-            this.start_textBox.Name = "start_textBox";
-            this.start_textBox.Size = new System.Drawing.Size(76, 20);
-            this.start_textBox.TabIndex = 10;
-            this.start_textBox.TextChanged += new System.EventHandler(this.start_textBox_TextChanged);
             // 
             // ApptType_textBox
             // 
@@ -129,7 +116,7 @@
             // 
             this.Customer_label.AutoSize = true;
             this.Customer_label.Font = new System.Drawing.Font("Gadugi", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Customer_label.Location = new System.Drawing.Point(69, 243);
+            this.Customer_label.Location = new System.Drawing.Point(72, 288);
             this.Customer_label.Name = "Customer_label";
             this.Customer_label.Size = new System.Drawing.Size(63, 16);
             this.Customer_label.TabIndex = 19;
@@ -137,17 +124,43 @@
             // 
             // Customer_textBox
             // 
-            this.Customer_textBox.Location = new System.Drawing.Point(72, 262);
+            this.Customer_textBox.Location = new System.Drawing.Point(72, 307);
             this.Customer_textBox.Name = "Customer_textBox";
             this.Customer_textBox.Size = new System.Drawing.Size(186, 20);
             this.Customer_textBox.TabIndex = 18;
             this.Customer_textBox.TextChanged += new System.EventHandler(this.Customer_textBox_TextChanged);
             // 
+            // Start_DateTimePicker
+            // 
+            this.Start_DateTimePicker.CustomFormat = "yyyy-MM-dd hh:mm:ss";
+            this.Start_DateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.Start_DateTimePicker.Location = new System.Drawing.Point(72, 189);
+            this.Start_DateTimePicker.MaxDate = new System.DateTime(2224, 12, 31, 0, 0, 0, 0);
+            this.Start_DateTimePicker.MinDate = new System.DateTime(2004, 1, 1, 0, 0, 0, 0);
+            this.Start_DateTimePicker.Name = "Start_DateTimePicker";
+            this.Start_DateTimePicker.Size = new System.Drawing.Size(129, 20);
+            this.Start_DateTimePicker.TabIndex = 20;
+            this.Start_DateTimePicker.ValueChanged += new System.EventHandler(this.Start_DateTimePicker_ValueChanged);
+            // 
+            // End_DateTimePicker
+            // 
+            this.End_DateTimePicker.CustomFormat = "hh:mm:ss";
+            this.End_DateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.End_DateTimePicker.Location = new System.Drawing.Point(72, 248);
+            this.End_DateTimePicker.MaxDate = new System.DateTime(2224, 12, 31, 0, 0, 0, 0);
+            this.End_DateTimePicker.MinDate = new System.DateTime(2003, 1, 1, 0, 0, 0, 0);
+            this.End_DateTimePicker.Name = "End_DateTimePicker";
+            this.End_DateTimePicker.Size = new System.Drawing.Size(63, 20);
+            this.End_DateTimePicker.TabIndex = 21;
+            this.End_DateTimePicker.ValueChanged += new System.EventHandler(this.End_DateTimePicker_ValueChanged);
+            // 
             // AddAppointmentForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(331, 418);
+            this.ClientSize = new System.Drawing.Size(331, 478);
+            this.Controls.Add(this.End_DateTimePicker);
+            this.Controls.Add(this.Start_DateTimePicker);
             this.Controls.Add(this.Customer_label);
             this.Controls.Add(this.Customer_textBox);
             this.Controls.Add(this.save_button);
@@ -155,9 +168,7 @@
             this.Controls.Add(this.end_label);
             this.Controls.Add(this.start_label);
             this.Controls.Add(this.ApptType_label);
-            this.Controls.Add(this.end_textBox);
             this.Controls.Add(this.variable_text_label);
-            this.Controls.Add(this.start_textBox);
             this.Controls.Add(this.ApptType_textBox);
             this.Name = "AddAppointmentForm";
             this.Text = "AddAppointmentForm";
@@ -174,11 +185,11 @@
         private System.Windows.Forms.Label end_label;
         private System.Windows.Forms.Label start_label;
         private System.Windows.Forms.Label ApptType_label;
-        private System.Windows.Forms.TextBox end_textBox;
         private System.Windows.Forms.Label variable_text_label;
-        private System.Windows.Forms.TextBox start_textBox;
         private System.Windows.Forms.TextBox ApptType_textBox;
         private System.Windows.Forms.Label Customer_label;
         private System.Windows.Forms.TextBox Customer_textBox;
+        private System.Windows.Forms.DateTimePicker Start_DateTimePicker;
+        private System.Windows.Forms.DateTimePicker End_DateTimePicker;
     }
 }

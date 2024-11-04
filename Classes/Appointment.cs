@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,19 @@ namespace AkariBowens_Sheduling_System.DB
         // ----- Properties ----- //
         public static bool AddAppointment(Appointment appt)
         {
+            Appointment newAppointment = appt;
+
+            // Appointmetn ID is auto_inc
+            string ApptAddString = $"INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdby, lastUpdate, lastUpdateBy) VALUES({newAppointment.CustID}, {newAppointment.UserID}, {newAppointment.Title}, {newAppointment.Description}, {newAppointment.Location}, {newAppointment.Contact}, {newAppointment.ApptType}, {newAppointment.URL}, {newAppointment.StartTime.ToString("yyyy-mm-dd")}, {newAppointment.EndTime.ToString("yyyy-mm-dd")}, {newAppointment.CreateDate}, {newAppointment.CreatedBy}, {newAppointment.LastUpdate}, {newAppointment.LastUpdatedBy});";
+
+            
+            MySqlCommand addAppointment = new MySqlCommand(ApptAddString, DBConnection.connect);
+            DBConnection.OpenConnection();
+
+            if (addAppointment.ExecuteNonQuery() == 0)
+            {
+                return false;
+            }
             
             
             return true;
@@ -46,25 +60,25 @@ namespace AkariBowens_Sheduling_System.DB
 
         // ----- Constructor ----- //
 
-        public Appointment()
+        public Appointment( int custId, DateTime start, DateTime end, string apptType)
         {
-            // Get from constructor?
-            ApptID = -1;
-            CustID = -1;
+            
+            // Get ID from selected Customer via customer object
+            CustID = custId;
             UserID = CurrentUser.CurrentUserID;
 
-            Title = "";
-            Description = "";
-            Location = CurrentUser.UserLocation;
+            Title = "not needed";
+            Description = "not needed";
+            Location = "not needed";
 
             // Get from user input
-            Contact = "";
-            ApptType = "";
-            URL = "";
+            Contact = "not needed";
+            ApptType = apptType;
+            URL = "not needed";
 
             // Get from constructor
-            StartTime =  new DateTime(12, 0, 0);
-            EndTime = new DateTime(1, 0, 0);
+            StartTime =  start;
+            EndTime = end;
             
             CreateDate = DateTime.Now;
             Console.WriteLine(CreateDate);

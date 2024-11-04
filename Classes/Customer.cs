@@ -67,12 +67,13 @@ namespace AkariBowens_Sheduling_System.DB
                 MySqlCommand insertCustomer = new MySqlCommand(customerInsertstring, connection);
 
                 // if this returns -1... run error
-                if (insertCustomer.ExecuteNonQuery() == -1)
-                { 
-                    Console.WriteLine($"Added new customer {newCust.CustomerName}");
+                if (insertCustomer.ExecuteNonQuery() == 0)
+                {
+                    Console.WriteLine($"Adding customer failed!");
                     throw new Exception("Insert Failed!");
                 }
-                
+
+                Console.WriteLine($"Added new customer {newCust.CustomerName}");
                 return true;
                 
             } catch (Exception ArgumentException)
