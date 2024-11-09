@@ -86,7 +86,8 @@ namespace AkariBowens_Sheduling_System.DB
 
             DataTable AppointmentList;
 
-            string allAppointmentsQuery = $"SELECT appointmentId, customerId, userId, type FROM appointment WHERE userId = {CurrentUserID};";
+            // Only display what's necessary
+            string allAppointmentsQuery = $"SELECT appointmentId, customerId, userId, type, start, end FROM appointment WHERE userId = {CurrentUserID};";
             MySqlCommand apptsQuery = new MySqlCommand(allAppointmentsQuery, DBConnection.connect);
             DBConnection.OpenConnection();
             using (DBConnection.connect)
@@ -109,10 +110,12 @@ namespace AkariBowens_Sheduling_System.DB
             // Rewrite this to return address, city, country instead of addressId & where appointmentId is the source of the customer
             //string allCustomersQuery = $"SELECT customerId, customerName, address, city, country FROM customer INNER JOIN address ON customer.addressId = address.addressId INNER JOIN address INNER JOIN city ON address.cityId = city.cityId INNER JOIN country ON city.countryId = country.countryId;"
            
-            string allCustomersQuery = $"SELECT customerId, customerName, addressId FROM customer;";
+            // addressId
+            string allCustomersQuery = $"SELECT customerId, customerName, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
             //$"WHERE userId = {CurrentUserID};";
             MySqlCommand customersQuery = new MySqlCommand(allCustomersQuery, DBConnection.connect);
             DBConnection.OpenConnection();
+            // Only display what's necessary
             using (DBConnection.connect)
             {
                 MySqlDataAdapter dataAdapter = new MySqlDataAdapter(allCustomersQuery, DBConnection.connect);

@@ -55,10 +55,9 @@ namespace AkariBowens_Sheduling_System.DB
 
                 // Initializes new 'Address' instance
                 Address address = newAddr;
-   
-                MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["localdb"].ConnectionString);
 
                 DBConnection.OpenConnection();
+                MySqlConnection connection = DBConnection.connect;
 
                 // -- Add On -- //
                 // Do address ID logic

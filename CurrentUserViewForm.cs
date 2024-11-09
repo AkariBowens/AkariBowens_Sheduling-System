@@ -120,7 +120,7 @@ namespace AkariBowens_Sheduling_System
             // Opens new Add Appointment Form
             if (CustomerDGV.CurrentRow.Selected) {
                 AddAppointmentForm addAppointment = new AddAppointmentForm();
-                addAppointment.SelectedCustomer = CustomerDGV.CurrentRow.Cells["customerName"].Value.ToString(); 
+                Customer.SelectedCustomer = new Customer(CustomerDGV.CurrentRow.Cells["customerName"].Value.ToString(), CustomerDGV.CurrentRow.Cells["address"].Value.ToString());
 
                 addAppointment.Show();
             }

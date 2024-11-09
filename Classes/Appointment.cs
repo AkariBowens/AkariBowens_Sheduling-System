@@ -2,9 +2,11 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace AkariBowens_Sheduling_System.DB
 {
@@ -37,26 +39,64 @@ namespace AkariBowens_Sheduling_System.DB
 
 
         // ----- Properties ----- //
-        public static bool AddAppointment(Appointment appt)
+        public static bool AddAppointment(Appointment appt, string customerName)
         {
-            Appointment newAppointment = appt;
-
-            // Appointmetn ID is auto_inc
-            string ApptAddString = $"INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdby, lastUpdate, lastUpdateBy) VALUES({newAppointment.CustID}, {newAppointment.UserID}, {newAppointment.Title}, {newAppointment.Description}, {newAppointment.Location}, {newAppointment.Contact}, {newAppointment.ApptType}, {newAppointment.URL}, {newAppointment.StartTime.ToString("yyyy-mm-dd")}, {newAppointment.EndTime.ToString("yyyy-mm-dd")}, {newAppointment.CreateDate}, {newAppointment.CreatedBy}, {newAppointment.LastUpdate}, {newAppointment.LastUpdatedBy});";
-
-            
-            MySqlCommand addAppointment = new MySqlCommand(ApptAddString, DBConnection.connect);
-            DBConnection.OpenConnection();
-
-            if (addAppointment.ExecuteNonQuery() == 0)
+            try
             {
+
+                Appointment newAppointment = appt;
+                string custName = customerName;
+                // Appointment ID is auto_inc
+               
+                Console.WriteLine(custName + " -- in AppAppointment()");
+                // need to work with foreign keys and their constraints
+                int? customerID;
+                
+                if (newAppointment != null) 
+                { 
+                    DBConnection.OpenConnection();
+
+                    string CustomerIDString = $"SELECT customerId FROM customer WHERE customerName = '{custName}';";
+
+                    MySqlCommand findCustomerID = new MySqlCommand(CustomerIDString, DBConnection.connect);
+
+                    customerID = Convert.ToInt32(findCustomerID.ExecuteScalar());
+
+                    string ApptAddString = $"INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdby, lastUpdate, lastUpdateBy) VALUES( {customerID}, {newAppointment.UserID}, '{newAppointment.Title}', '{newAppointment.Description}', '{newAppointment.Location}', '{newAppointment.Contact}', '{newAppointment.ApptType}', '{newAppointment.URL}', '{newAppointment.StartTime.ToString("yyyy-MM-dd")}', '{newAppointment.EndTime.ToString("yyyy-MM-dd")}', '{newAppointment.CreateDate.ToString("yyyy-MM-dd")}', '{newAppointment.CreatedBy}', '{newAppointment.LastUpdate.ToString("yyyy-MM-dd")}', '{newAppointment.LastUpdatedBy}');";
+
+                    MySqlCommand addAppointment = new MySqlCommand(ApptAddString, DBConnection.connect);
+                    if (addAppointment.ExecuteNonQuery() == 0)
+                    {
+                        return false;
+                        throw new Exception();
+                    }
+                    Console.WriteLine($"Added new appointment with {custName} on {newAppointment.StartTime.Date} @{newAppointment.StartTime.TimeOfDay}");
+                }
+
+                return true;
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.Message.ToString(), " --Appointment Adding");
                 return false;
             }
-            
-            
-            return true;
         }
-        // RemoveAppt()
+        public static bool RemoveAppt(int ApptId) {
+            int AppointmentId = ApptId;
+            string deleteString = "DELETE FROM customer WHERE appointmentId = {ApptId}";
+
+            MySqlCommand deleteAppt = new MySqlCommand(deleteString, DBConnection.connect);
+
+            if (deleteAppt.ExecuteNonQuery() == 0)
+            {
+                return false;
+                throw new Exception();
+            }
+            Console.WriteLine($"Removed appointment with ID {ApptId}");
+            return true;
+
+        }
+        // UpdateAppt()
 
         // ----- Constructor ----- //
 
@@ -67,14 +107,14 @@ namespace AkariBowens_Sheduling_System.DB
             CustID = custId;
             UserID = CurrentUser.CurrentUserID;
 
-            Title = "not needed";
-            Description = "not needed";
-            Location = "not needed";
+            Title = @"not needed";
+            Description = @"not needed";
+            Location = @"not needed";
 
             // Get from user input
-            Contact = "not needed";
-            ApptType = apptType;
-            URL = "not needed";
+            Contact = @"not needed";
+            ApptType = apptType.Trim();
+            URL = @"not needed";
 
             // Get from constructor
             StartTime =  start;
@@ -83,9 +123,9 @@ namespace AkariBowens_Sheduling_System.DB
             CreateDate = DateTime.Now;
             Console.WriteLine(CreateDate);
 
-            CreatedBy = "Admin";
+            CreatedBy = CurrentUser.UserName.Trim();
             LastUpdate = DateTime.Now;
-            LastUpdatedBy = "Admin";
+            LastUpdatedBy = CurrentUser.UserName.Trim();
         }
         // ----- Static Class ----- //
 
