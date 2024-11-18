@@ -22,6 +22,8 @@ namespace AkariBowens_Sheduling_System
         private DateTime OpenTime = new DateTime(2000, 12, 31, 9, 0, 0);
         private DateTime CloseTime = new DateTime(2000, 12, 31, 17, 0, 0);
 
+        public bool isNewAppt = true;
+        private static Appointment currentAppointment = Appointment.SelectedAppointment;
         public AddAppointmentForm()
         {
             InitializeComponent();
@@ -30,9 +32,27 @@ namespace AkariBowens_Sheduling_System
         private void AddAppointmentForm_Load(object sender, EventArgs e)
         {
             // Fill in later with data from DGV
-            Customer_textBox.Text = Customer.SelectedCustomer.CustomerName;
-            Customer_textBox.Enabled = false;
+            
+            if (isNewAppt == false) 
+            {
+                //foreach(DataRow row in CurrentUser.Appointments.Rows)
+                //{
+                //    if (Convert.ToInt32(row["customerId"]) == Appointment.SelectedAppointment.CustID)
+                //    {
+                //        Customer_textBox.Text = row["customerName"].ToString();
+                //        return;
+                //    }
+                //}
+                ApptType_textBox.Text = currentAppointment.ApptType;
+                Start_DateTimePicker.Value = currentAppointment.StartTime;
+                End_DateTimePicker.Value = currentAppointment.EndTime;
 
+            } 
+            else 
+            {
+                Customer_textBox.Text = Customer.SelectedCustomer.CustomerName;
+            }
+            Customer_textBox.Enabled = false;
             save_button.Enabled = false;
         }
 
@@ -188,13 +208,28 @@ namespace AkariBowens_Sheduling_System
 
         private void save_button_Click(object sender, EventArgs e)
         {
-            // Instantiates new Appointment to be added
+            try
+            {
 
-            // Makes start and end are on the same date
-            AddApptEnd = new DateTime(AddApptStart.Year, AddApptStart.Month,  AddApptStart.Day, AddApptEnd.Hour, AddApptEnd.Minute, AddApptEnd.Second);
-            Appointment SavedAppt = new Appointment(Customer.SelectedCustomer.CustomerID, AddApptStart, AddApptEnd, AddApptType );
-            
-            Appointment.AddAppointment(SavedAppt, Customer.SelectedCustomer.CustomerName);
+
+                // Makes start and end are on the same date
+                AddApptEnd = new DateTime(AddApptStart.Year, AddApptStart.Month, AddApptStart.Day, AddApptEnd.Hour, AddApptEnd.Minute, AddApptEnd.Second);
+
+                Console.WriteLine(Appointment.SelectedAppointment.CustID + " -- Customer Id");
+                // Instantiates new Appointment to be added
+                Appointment SavedAppt = new Appointment(Appointment.SelectedAppointment.CustID, AddApptStart, AddApptEnd, AddApptType);
+
+                if (Appointment.UpdateAppt(Appointment.SelectedAppointment, SavedAppt))
+                {
+                    Customer.SelectedCustomer = null;
+                    Appointment.SelectedAppointment = null;
+                    Close();
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message.ToString());
+            }
         }
 
         private void start_label_Click(object sender, EventArgs e)
@@ -206,7 +241,9 @@ namespace AkariBowens_Sheduling_System
         {
             try
             {
-                
+             
+                // Only run error message when you Start_DateTimePicker is out of focus
+
                 DateTime tempStartTime = Start_DateTimePicker.Value;
                 Console.WriteLine($"Chosen: {Start_DateTimePicker.Value}, Now: {DateTime.Now}");
                 if (tempStartTime >= DateTime.Now)

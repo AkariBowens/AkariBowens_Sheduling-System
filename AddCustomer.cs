@@ -150,7 +150,7 @@ namespace AkariBowens_Sheduling_System
         private void AddCustomer_Load(object sender, EventArgs e)
         {
             
-            if (!isNewCustomer)
+            if (isNewCustomer == false)
             {
                 //  load with modify/update label and prefilled date from list w/ all customers related to {CurrentUser.UserId}
 

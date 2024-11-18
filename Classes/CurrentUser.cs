@@ -84,7 +84,7 @@ namespace AkariBowens_Sheduling_System.DB
         public static DataTable GetAppointments()
         {
 
-            DataTable AppointmentList;
+            DataTable AppointmentTable;
 
             // Only display what's necessary
             string allAppointmentsQuery = $"SELECT appointmentId, customerId, userId, type, start, end FROM appointment WHERE userId = {CurrentUserID};";
@@ -93,13 +93,60 @@ namespace AkariBowens_Sheduling_System.DB
             using (DBConnection.connect)
             {
                 MySqlDataAdapter dataAdapter = new MySqlDataAdapter(allAppointmentsQuery, DBConnection.connect);
-                AppointmentList = new DataTable();
+                AppointmentTable = new DataTable();
 
-                dataAdapter.Fill(AppointmentList);
+                dataAdapter.Fill(AppointmentTable);
             }
 
-            return AppointmentList;
+            // Adds data from datatable to Appointment list
+            //for (int i = 0; i < AppointmentTable.Rows.Count; i++)
+            //foreach (DataRow row in AppointmentTable.Rows) {   
+            //{
+            //    //for (int j = 0; i < AppointmentTable.Rows.Columns.Count; i++)
+            //    //{
 
+            //    Appointment TempAppointment = new Appointment(Convert.ToInt32(row["appointmentId"]), Convert.ToDateTime(row["start"]), (DateTime)row["end"], row["type"].ToString());
+            //        TempAppointment.ApptID = Convert.ToInt32(row["appointmentId"]);
+            //    Appointments.Add(TempAppointment);
+            //    //}
+            //    //Console.WriteLine(Appointments[i].ApptID);
+
+            //}
+            //DataColumn column = new DataColumn();
+            //column.ColumnName = "Appointment ID";
+            //column.DataType = typeof(int);
+
+            //AppointmentTable.Columns.Add(column);
+
+            return AppointmentTable;
+
+        }
+
+        public static DataTable GetAppointmentsByDate(DateTime date)
+        {
+            //DataTable AppointmentTable;
+
+            DateTime pickedDate = date;
+            DataTable ApptsTable;
+
+            string getbyDate = $"SELECT customerName, appointmentId, TIME(start), TIME(end), type FROM customer INNER JOIN appointment ON customer.customerId = appointment.customerId WHERE DATE(start) = '{pickedDate.Date.ToString("yyyy-MM-dd")}' AND userId = {CurrentUserID};";
+
+            DBConnection.OpenConnection();
+
+            MySqlConnection connection = DBConnection.connect;
+
+
+            using (connection)
+            {
+
+                MySqlDataAdapter mySqlCommand = new MySqlDataAdapter(getbyDate, connection);
+
+                ApptsTable = new DataTable();
+
+                mySqlCommand.Fill(ApptsTable);
+            }
+
+            return ApptsTable;
         }
 
         public static DataTable GetCustomers()
@@ -109,25 +156,35 @@ namespace AkariBowens_Sheduling_System.DB
 
             // Rewrite this to return address, city, country instead of addressId & where appointmentId is the source of the customer
             //string allCustomersQuery = $"SELECT customerId, customerName, address, city, country FROM customer INNER JOIN address ON customer.addressId = address.addressId INNER JOIN address INNER JOIN city ON address.cityId = city.cityId INNER JOIN country ON city.countryId = country.countryId;"
-           
+
             // addressId
-            string allCustomersQuery = $"SELECT customerId, customerName, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
+
+
+            //string allCustomersQuery = $"SELECT customerId, customerName, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
+
+            string allCustsQuery = $"SELECT customername, customerId, address, addressId, city, country FROM customer INNER JOIN address ON customer.customerId = address.customerId WHERE appointment.userId = {CurrentUserID}";
             //$"WHERE userId = {CurrentUserID};";
-            MySqlCommand customersQuery = new MySqlCommand(allCustomersQuery, DBConnection.connect);
+            MySqlCommand customersQuery = new MySqlCommand(allCustsQuery, DBConnection.connect);
             DBConnection.OpenConnection();
             // Only display what's necessary
             using (DBConnection.connect)
             {
-                MySqlDataAdapter dataAdapter = new MySqlDataAdapter(allCustomersQuery, DBConnection.connect);
+                MySqlDataAdapter dataAdapter = new MySqlDataAdapter(allCustsQuery, DBConnection.connect);
                 CustomerList = new DataTable();
 
                 dataAdapter.Fill(CustomerList);
             }
 
+            
+
+
             return CustomerList;
         }
 
-        public static DataTable Appointments { get { GetAppointments(); return Appointments; } set { GetAppointments(); } }
+        //public static List<Appointment> Appointments { get { GetAppointments(); return Appointments; } set { GetAppointments(); } }
+        public static List<Appointment> Appointments { get; set; }
+
+        //public static List<Appointment> Appointments = new List<Appointment>();
         public static DataTable Customers
         {
             get { GetCustomers(); return Customers; }

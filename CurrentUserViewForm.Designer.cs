@@ -39,6 +39,7 @@
             this.appts_add_button = new System.Windows.Forms.Button();
             this.appts_update_button = new System.Windows.Forms.Button();
             this.appts_delete_button = new System.Windows.Forms.Button();
+            this.viewAll_Link = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.AppointmentDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CustomerDGV)).BeginInit();
             this.SuspendLayout();
@@ -58,7 +59,7 @@
             // 
             this.appts_label.AutoSize = true;
             this.appts_label.Font = new System.Drawing.Font("Gadugi", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.appts_label.Location = new System.Drawing.Point(564, 58);
+            this.appts_label.Location = new System.Drawing.Point(564, 64);
             this.appts_label.Name = "appts_label";
             this.appts_label.Size = new System.Drawing.Size(153, 25);
             this.appts_label.TabIndex = 1;
@@ -68,7 +69,7 @@
             // 
             this.customers_label.AutoSize = true;
             this.customers_label.Font = new System.Drawing.Font("Gadugi", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.customers_label.Location = new System.Drawing.Point(67, 58);
+            this.customers_label.Location = new System.Drawing.Point(67, 64);
             this.customers_label.Name = "customers_label";
             this.customers_label.Size = new System.Drawing.Size(115, 25);
             this.customers_label.TabIndex = 2;
@@ -147,6 +148,7 @@
             this.appts_update_button.TabIndex = 9;
             this.appts_update_button.Text = "Update";
             this.appts_update_button.UseVisualStyleBackColor = true;
+            this.appts_update_button.Click += new System.EventHandler(this.appts_update_button_Click);
             // 
             // appts_delete_button
             // 
@@ -157,12 +159,26 @@
             this.appts_delete_button.TabIndex = 8;
             this.appts_delete_button.Text = "Delete";
             this.appts_delete_button.UseVisualStyleBackColor = true;
+            this.appts_delete_button.Click += new System.EventHandler(this.appts_delete_button_Click);
+            // 
+            // viewAll_Link
+            // 
+            this.viewAll_Link.AutoSize = true;
+            this.viewAll_Link.Font = new System.Drawing.Font("Gadugi", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.viewAll_Link.Location = new System.Drawing.Point(863, 83);
+            this.viewAll_Link.Name = "viewAll_Link";
+            this.viewAll_Link.Size = new System.Drawing.Size(163, 16);
+            this.viewAll_Link.TabIndex = 11;
+            this.viewAll_Link.TabStop = true;
+            this.viewAll_Link.Text = "View Appointments by Day";
+            this.viewAll_Link.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // CurrentUserViewForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1101, 497);
+            this.Controls.Add(this.viewAll_Link);
             this.Controls.Add(this.appts_add_button);
             this.Controls.Add(this.appts_update_button);
             this.Controls.Add(this.appts_delete_button);
@@ -197,5 +213,6 @@
         private System.Windows.Forms.Button appts_add_button;
         private System.Windows.Forms.Button appts_update_button;
         private System.Windows.Forms.Button appts_delete_button;
+        private System.Windows.Forms.LinkLabel viewAll_Link;
     }
 }
