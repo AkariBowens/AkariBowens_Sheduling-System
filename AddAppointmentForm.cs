@@ -210,20 +210,24 @@ namespace AkariBowens_Sheduling_System
         {
             try
             {
-
-
                 // Makes start and end are on the same date
-                AddApptEnd = new DateTime(AddApptStart.Year, AddApptStart.Month, AddApptStart.Day, AddApptEnd.Hour, AddApptEnd.Minute, AddApptEnd.Second);
+                //AddApptEnd = new DateTime(AddApptStart.Year, AddApptStart.Month, AddApptStart.Day, AddApptEnd.Hour, AddApptEnd.Minute, AddApptEnd.Second);
 
-                Console.WriteLine(Appointment.SelectedAppointment.CustID + " -- Customer Id");
+                Console.WriteLine(Customer.SelectedCustomer.CustomerID + " -- Customer Id");
                 // Instantiates new Appointment to be added
-                Appointment SavedAppt = new Appointment(Appointment.SelectedAppointment.CustID, AddApptStart, AddApptEnd, AddApptType);
-
-                if (Appointment.UpdateAppt(Appointment.SelectedAppointment, SavedAppt))
+                Appointment SavedAppt = new Appointment(-1, Customer.SelectedCustomer.CustomerID, AddApptStart, AddApptEnd, AddApptType);
+                Customer savedCustomer = Customer.SelectedCustomer;
+                Console.WriteLine("Save button..");
+                if (Appointment.AddAppointment(SavedAppt, savedCustomer))
                 {
-                    Customer.SelectedCustomer = null;
-                    Appointment.SelectedAppointment = null;
+                    //Customer.SelectedCustomer = null;
+                    //Appointment.SelectedAppointment = null;
+                    Console.WriteLine("Save successful");
                     Close();
+                }
+                else
+                {
+                    throw new Exception("Something went wrong during Add operation.");
                 }
             }
             catch (Exception exc)
@@ -268,7 +272,7 @@ namespace AkariBowens_Sheduling_System
                                 
                             }
                             AddApptStart = tempStartTime;
-                            Console.WriteLine($"It works! {AddApptStart}");
+                            Console.WriteLine($"It works! {AddApptStart} -- Start time");
                             ToggleSave();
                         }
                         else
@@ -333,7 +337,7 @@ namespace AkariBowens_Sheduling_System
 
                             }
                             AddApptEnd = tempEndTime;
-                            Console.WriteLine($"It works! {AddApptStart}");
+                            Console.WriteLine($"It works! {AddApptEnd} -- ApptEnd");
                             ToggleSave();
                      }
                      else

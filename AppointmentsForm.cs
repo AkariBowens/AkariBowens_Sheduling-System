@@ -33,7 +33,11 @@ namespace AkariBowens_Sheduling_System
             //appointments_DGV.DataSource = CurrentUser.GetAppointmentsByDate(SelectedDate);
             
             appointments_DGV.DataSource = ApptsByDay;
-            
+            appointments_DGV.MultiSelect = false;
+            appointments_DGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            appointments_DGV.ReadOnly = true;
+            appointments_DGV.AllowUserToAddRows = false;
+
         }
 
         private void Delete_Button_Click(object sender, EventArgs e)
@@ -54,8 +58,69 @@ namespace AkariBowens_Sheduling_System
             }
 
             // appointments_DGV.DataSource = CurrentUser.GetAppointmentsByDate(SelectedDate);
-            //ApptsByDay.AcceptChanges();
+            // ApptsByDay.AcceptChanges();
             appointments_DGV.DataSource = ApptsByDay;
+        }
+
+        private void Update_Button_Click(object sender, EventArgs e)
+        {
+            if (appointments_DGV.CurrentRow.Selected)
+            {
+
+                UpdateAppointmentForm updateAppointmentForm = new UpdateAppointmentForm();
+                Console.WriteLine((int)appointments_DGV.CurrentRow.Cells["appointmentId"].Value + " -- appointmentID");
+
+                //DataTable appointments = CurrentUser.GetAppointments();
+
+                Appointment.SelectedAppointment = new Appointment((int)appointments_DGV.CurrentRow.Cells["customerId"].Value, (DateTime)appointments_DGV.CurrentRow.Cells["start"].Value, (DateTime)appointments_DGV.CurrentRow.Cells["end"].Value, appointments_DGV.CurrentRow.Cells["type"].Value.ToString());
+
+                Appointment.SelectedAppointment.ApptID = (int)appointments_DGV.CurrentRow.Cells["appointmentId"].Value;
+
+                DataTable tempCustomerList = CurrentUser.GetCustomers();
+                DataTable tempAppointmentList = CurrentUser.GetAppointmentsByDate(SelectedDate);
+
+                foreach (DataRow row in tempCustomerList.Rows)
+                {
+                    foreach (DataRow apptRow in tempAppointmentList.Rows)
+                    {
+                        if ((int)row["customerID"] == (int)apptRow["customerId"])
+                        {
+                            Console.WriteLine(row["customerName"].ToString() + " --custName");
+
+                            // Going to have to change after Constructor update
+                            Customer.SelectedCustomer = new Customer(row["customerName"].ToString(), row["address"].ToString());
+                        }
+                    }
+                }
+
+                updateAppointmentForm.Show();
+
+            }
+            else
+            {
+                MessageBox.Show("Please select an appointment!");
+            }
+
+            // Resets bindings for Appointment DataGridView
+            appointments_DGV.DataSource = CurrentUser.GetAppointments();
+        }
+
+        private void Add_Button_Click(object sender, EventArgs e)
+        {
+
+            DialogResult = MessageBox.Show( "Are you sure? \n This returns you to the Home Screen", "Adding an appointment", MessageBoxButtons.YesNoCancel);
+
+            if (DialogResult == DialogResult.Yes)
+            {
+                Close();
+                AllAppointmentsCalendar.ActiveForm.Close();
+                MessageBox.Show("Please select a customer", "Adding an appointment");
+            }
+        }
+
+        private void Close_button_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

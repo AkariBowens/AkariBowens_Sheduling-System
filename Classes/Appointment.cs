@@ -41,28 +41,36 @@ namespace AkariBowens_Sheduling_System.DB
         public static Appointment SelectedAppointment;
 
         // ----- Properties ----- //
-        public static bool AddAppointment(Appointment appt, string customerName)
+        public static bool AddAppointment(Appointment appt, Customer customer)
         {
             try
             {
 
                 Appointment newAppointment = appt;
-                string custName = customerName;
-               
-                Console.WriteLine(custName + " -- in AppAppointment()");
-                int? customerID;
-                
+                Console.WriteLine($"In AddAppointment(): {appt.EndTime.Date}");
+                Customer customerForAppt = customer;
+
+                // Converts Appointment start and end times to local and accounts for DST
+                newAppointment.StartTime = TimeZoneInfo.ConvertTimeToUtc(newAppointment.StartTime, TimeZoneInfo.Local);
+                newAppointment.EndTime = TimeZoneInfo.ConvertTimeToUtc(newAppointment.EndTime, TimeZoneInfo.Local);
+
+                newAppointment.CreateDate = TimeZoneInfo.ConvertTimeToUtc(newAppointment.CreateDate, TimeZoneInfo.Local);
+                newAppointment.LastUpdate = TimeZoneInfo.ConvertTimeToUtc(newAppointment.LastUpdate, TimeZoneInfo.Local);
+
+                //Console.WriteLine(custName + " -- in AppAppointment()");
+                //int? customerID;
+
                 if (newAppointment != null) 
                 { 
                     DBConnection.OpenConnection();
 
-                    string CustomerIDString = $"SELECT customerId FROM customer WHERE customerName = '{custName}';";
+                    //string CustomerIDString = $"SELECT customerId FROM customer WHERE customerName = '{custName}';";
 
-                    MySqlCommand findCustomerID = new MySqlCommand(CustomerIDString, DBConnection.connect);
+                    //MySqlCommand findCustomerID = new MySqlCommand(CustomerIDString, DBConnection.connect);
 
-                    customerID = Convert.ToInt32(findCustomerID.ExecuteScalar());
+                    //customerID = Convert.ToInt32(findCustomerID.ExecuteScalar());
 
-                    string ApptAddString = $"INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdby, lastUpdate, lastUpdateBy) VALUES( {customerID}, {newAppointment.UserID}, '{newAppointment.Title}', '{newAppointment.Description}', '{newAppointment.Location}', '{newAppointment.Contact}', '{newAppointment.ApptType}', '{newAppointment.URL}', '{newAppointment.StartTime.ToString("yyyy-MM-dd hh:mm:ss")}', '{newAppointment.EndTime.ToString("yyyy-MM-dd hh:mm:ss")}', '{newAppointment.CreateDate.ToString("yyyy-MM-dd hh:mm:ss")}', '{newAppointment.CreatedBy}', '{newAppointment.LastUpdate.ToString("yyyy-MM-dd hh:mm:ss")}', '{newAppointment.LastUpdatedBy}');";
+                    string ApptAddString = $"INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdby, lastUpdate, lastUpdateBy) VALUES( {customerForAppt.CustomerID}, {newAppointment.UserID}, '{newAppointment.Title}', '{newAppointment.Description}', '{newAppointment.Location}', '{newAppointment.Contact}', '{newAppointment.ApptType}', '{newAppointment.URL}', '{newAppointment.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.CreatedBy}', '{newAppointment.LastUpdate.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.LastUpdatedBy}');";
 
                     MySqlCommand addAppointment = new MySqlCommand(ApptAddString, DBConnection.connect);
                     if (addAppointment.ExecuteNonQuery() == 0)
@@ -70,9 +78,11 @@ namespace AkariBowens_Sheduling_System.DB
                         return false;
                         throw new Exception();
                     }
-                    Console.WriteLine($"Added new appointment with {custName} on {newAppointment.StartTime.Date} @{newAppointment.StartTime.TimeOfDay}");
+                    Console.WriteLine($"Added new appointment with {customerForAppt.CustomerName} on {newAppointment.StartTime.Date.ToString("MM-dd-yyyy")} @{newAppointment.StartTime.TimeOfDay}");
                 }
 
+                Customer.SelectedCustomer = null;
+                SelectedAppointment = null;
                 return true;
             }
             catch (Exception exc)
@@ -104,11 +114,21 @@ namespace AkariBowens_Sheduling_System.DB
         {
             try
             {
-                Console.WriteLine(Appt.ApptID);
+                //Console.WriteLine(Appt.ApptID);
                 Appointment appointment = Appt;
 
-                string start = $"start = '{appointment.StartTime.ToString("yyyy-MM-dd hh:mm:ss")}'";
-                string end = $"end = '{appointment.EndTime.ToString("yyyy-MM-dd hh:mm:ss")}'";
+                //Console.WriteLine($"Start time before conversion: {appointment.StartTime}");
+
+                // Converts Appointment start and end times to utc and accounts for DST
+                appointment.StartTime = TimeZoneInfo.ConvertTimeToUtc(appointment.StartTime, TimeZoneInfo.Local);
+                appointment.EndTime = TimeZoneInfo.ConvertTimeToUtc(appointment.EndTime, TimeZoneInfo.Local);
+
+                appointment.CreateDate = TimeZoneInfo.ConvertTimeToUtc(appointment.CreateDate, TimeZoneInfo.Local);
+                appointment.LastUpdate = TimeZoneInfo.ConvertTimeToUtc(appointment.LastUpdate, TimeZoneInfo.Local);
+
+                // Added "HH" instead of hh
+                string start = $"start = '{appointment.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}'";
+                string end = $"end = '{appointment.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}'";
                 string type = $"type = '{appointment.ApptType}'";
 
                 string fullString = string.Empty;
@@ -158,6 +178,7 @@ namespace AkariBowens_Sheduling_System.DB
                 }
 
                 Console.WriteLine($"Updated Appointment with ID: {appointment.ApptID}");
+                
                 return true;
             } catch (Exception exc)
             {
@@ -168,9 +189,19 @@ namespace AkariBowens_Sheduling_System.DB
 
         // ----- Constructor ----- //
 
-        public Appointment( int custId, DateTime start, DateTime end, string apptType)
+        public Appointment(int apptId, int custId, DateTime start, DateTime end, string apptType)
         {
-            
+            // Add 'int apptId' ^^ above
+
+            if (apptId >= 0)
+            {
+                ApptID = apptId;
+            }
+            else
+            {
+                ApptID = -1;
+            }
+
             // Get ID from selected Customer via customer object
             CustID = custId;
             UserID = CurrentUser.CurrentUserID;
@@ -189,7 +220,6 @@ namespace AkariBowens_Sheduling_System.DB
             EndTime = end;
             
             CreateDate = DateTime.Now;
-            Console.WriteLine(CreateDate);
 
             CreatedBy = CurrentUser.UserName.Trim();
             LastUpdate = DateTime.Now;

@@ -120,11 +120,14 @@ namespace AkariBowens_Sheduling_System
             // Opens new Add Appointment Form
             if (CustomerDGV.CurrentRow.Selected) {
                 AddAppointmentForm addAppointment = new AddAppointmentForm();
+
+                // Customer constructor
                 Customer.SelectedCustomer = new Customer(CustomerDGV.CurrentRow.Cells["customerName"].Value.ToString(), CustomerDGV.CurrentRow.Cells["address"].Value.ToString());
-                addAppointment.isNewAppt = true;
+                Customer.SelectedCustomer.CustomerID = Convert.ToInt32(CustomerDGV.CurrentRow.Cells["customerId"].Value);
+                //addAppointment.isNewAppt = true;
                 addAppointment.Show();
 
-                Customer.SelectedCustomer = null;
+                //Customer.SelectedCustomer = null;
             }
             else {
                 MessageBox.Show("Select or add a new customer!");
@@ -161,9 +164,7 @@ namespace AkariBowens_Sheduling_System
 
                 DataTable appointments = CurrentUser.GetAppointments();
 
-                Appointment.SelectedAppointment = new Appointment((int)AppointmentDGV.CurrentRow.Cells["customerId"].Value, (DateTime)AppointmentDGV.CurrentRow.Cells["start"].Value, (DateTime)AppointmentDGV.CurrentRow.Cells["end"].Value, AppointmentDGV.CurrentRow.Cells["type"].Value.ToString());
-
-                Appointment.SelectedAppointment.ApptID = (int)AppointmentDGV.CurrentRow.Cells["appointmentId"].Value;
+                Appointment.SelectedAppointment = new Appointment((int)AppointmentDGV.CurrentRow.Cells["appointmentId"].Value, (int)AppointmentDGV.CurrentRow.Cells["customerId"].Value, (DateTime)AppointmentDGV.CurrentRow.Cells["start"].Value, (DateTime)AppointmentDGV.CurrentRow.Cells["end"].Value, AppointmentDGV.CurrentRow.Cells["type"].Value.ToString());
 
                 DataTable tempCustomerList = CurrentUser.GetCustomers();
                 DataTable tempAppointmentList = CurrentUser.GetAppointments();
@@ -190,13 +191,13 @@ namespace AkariBowens_Sheduling_System
                 MessageBox.Show("Please select an appointment!");
             }
 
-            // Resets bindings for Appointment DataGridView
+            // Resets source for Appointment DataGridView
             AppointmentDGV.DataSource = CurrentUser.GetAppointments();
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Open a new All Appointments form
+            // Opens a new AppointmentsCalendar form
             AllAppointmentsCalendar allAppointmentsCalendar = new AllAppointmentsCalendar();
             allAppointmentsCalendar.Show();
         }
