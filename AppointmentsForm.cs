@@ -17,7 +17,7 @@ namespace AkariBowens_Sheduling_System
     {
         public static DateTime SelectedDate;
         //private static DataTable AllAppointments = CurrentUser.GetAppointments();
-        private static DataTable ApptsByDay { get { return CurrentUser.GetAppointmentsByDate(SelectedDate); } set { CurrentUser.GetAppointmentsByDate(SelectedDate); } }
+        private static DataTable ApptsByDay { get { return Appointment.GetAppointmentsByDate(SelectedDate); } set { Appointment.GetAppointmentsByDate(SelectedDate); } }
     
         public AppointmentsForm()
         {
@@ -72,12 +72,11 @@ namespace AkariBowens_Sheduling_System
 
                 //DataTable appointments = CurrentUser.GetAppointments();
 
-                Appointment.SelectedAppointment = new Appointment((int)appointments_DGV.CurrentRow.Cells["customerId"].Value, (DateTime)appointments_DGV.CurrentRow.Cells["start"].Value, (DateTime)appointments_DGV.CurrentRow.Cells["end"].Value, appointments_DGV.CurrentRow.Cells["type"].Value.ToString());
+                Appointment.SelectedAppointment = new Appointment((int)appointments_DGV.CurrentRow.Cells["appointmentId"].Value, (int)appointments_DGV.CurrentRow.Cells["customerId"].Value, (DateTime)appointments_DGV.CurrentRow.Cells["start"].Value, (DateTime)appointments_DGV.CurrentRow.Cells["end"].Value, appointments_DGV.CurrentRow.Cells["type"].Value.ToString());
 
-                Appointment.SelectedAppointment.ApptID = (int)appointments_DGV.CurrentRow.Cells["appointmentId"].Value;
 
                 DataTable tempCustomerList = CurrentUser.GetCustomers();
-                DataTable tempAppointmentList = CurrentUser.GetAppointmentsByDate(SelectedDate);
+                DataTable tempAppointmentList = Appointment.GetAppointmentsByDate(SelectedDate);
 
                 foreach (DataRow row in tempCustomerList.Rows)
                 {
@@ -102,7 +101,7 @@ namespace AkariBowens_Sheduling_System
             }
 
             // Resets bindings for Appointment DataGridView
-            appointments_DGV.DataSource = CurrentUser.GetAppointments();
+            appointments_DGV.DataSource = Appointment.GetAppointments();
         }
 
         private void Add_Button_Click(object sender, EventArgs e)

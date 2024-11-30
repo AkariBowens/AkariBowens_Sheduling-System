@@ -257,7 +257,7 @@ namespace AkariBowens_Sheduling_System
                         if (tempStartTime.Hour >= OpenTime.Hour && tempStartTime.Hour <= CloseTime.Hour)
                         {
                             // Checks if selected times overlap
-                            DataTable Appointments = CurrentUser.GetAppointments();
+                            DataTable Appointments = Appointment.GetAppointments();
                             foreach(DataRow row in Appointments.Rows)
                             {
                                 
@@ -320,7 +320,7 @@ namespace AkariBowens_Sheduling_System
                      if (tempEndTime.Hour >= OpenTime.Hour && tempEndTime.Hour <= CloseTime.Hour)
                         {
                             // Checks if end time over laps with any appointments
-                            DataTable Appointments = CurrentUser.GetAppointments();
+                            DataTable Appointments = Appointment.GetAppointments();
                             foreach (DataRow row in Appointments.Rows)
                             {
                                 // Checks for appointments on the same day

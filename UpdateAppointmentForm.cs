@@ -61,10 +61,8 @@ namespace AkariBowens_Sheduling_System
             // New Appointment
             AddApptEnd = new DateTime(AddApptStart.Year, AddApptStart.Month, AddApptStart.Day, AddApptEnd.Hour, AddApptEnd.Minute, AddApptEnd.Second);
             Console.WriteLine(AddApptEnd);
-            Appointment newAppointment = new Appointment(Customer.SelectedCustomer.CustomerID, AddApptStart, AddApptEnd, AddApptType);
+            Appointment newAppointment = new Appointment(Appointment.SelectedAppointment.ApptID, Customer.SelectedCustomer.CustomerID, AddApptStart, AddApptEnd, AddApptType);
 
-            // Get ID of appointment
-            newAppointment.ApptID = Appointment.SelectedAppointment.ApptID;
             Console.WriteLine(newAppointment.ApptID + " -- newAppointment ApptID");
             if (Appointment.SelectedAppointment != null && Appointment.UpdateAppt(Appointment.SelectedAppointment, newAppointment))
             {
@@ -95,7 +93,7 @@ namespace AkariBowens_Sheduling_System
                         if (tempStartTime.Hour >= OpenTime.Hour && tempStartTime.Hour <= CloseTime.Hour)
                         {
                             // Checks if selected times overlap
-                            DataTable Appointments = CurrentUser.GetAppointments();
+                            DataTable Appointments = Appointment.GetAppointments();
                             foreach (DataRow row in Appointments.Rows)
                             {
                                 // Only check appointments with a different ID from current Appointment
@@ -165,7 +163,7 @@ namespace AkariBowens_Sheduling_System
                     if (tempEndTime.Hour >= OpenTime.Hour && tempEndTime.Hour <= CloseTime.Hour)
                     {
                         // Checks if end time over laps with any appointments
-                        DataTable Appointments = CurrentUser.GetAppointments();
+                        DataTable Appointments = Appointment.GetAppointments();
                         foreach (DataRow row in Appointments.Rows)
                         {
                             // Only check appointments with a different ID from current Appointment

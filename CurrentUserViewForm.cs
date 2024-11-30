@@ -92,7 +92,7 @@ namespace AkariBowens_Sheduling_System
             CustomerDGV.AllowUserToAddRows = false;
 
             // ----- Appointment DGV ----- //
-            AppointmentDGV.DataSource = CurrentUser.GetAppointments();
+            AppointmentDGV.DataSource = Appointment.GetAppointments();
             AppointmentDGV.MultiSelect = false;
             AppointmentDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             AppointmentDGV.ReadOnly = true;
@@ -150,7 +150,7 @@ namespace AkariBowens_Sheduling_System
                 MessageBox.Show("Please select an appointment!");
             }
 
-            AppointmentDGV.DataSource = CurrentUser.GetAppointments();
+            AppointmentDGV.DataSource = Appointment.GetAppointments();
         }
 
         private void appts_update_button_Click(object sender, EventArgs e)
@@ -162,12 +162,12 @@ namespace AkariBowens_Sheduling_System
                 UpdateAppointmentForm updateAppointmentForm = new UpdateAppointmentForm();
                 Console.WriteLine((int)AppointmentDGV.CurrentRow.Cells["appointmentId"].Value + " -- appointmentID");
 
-                DataTable appointments = CurrentUser.GetAppointments();
+                DataTable appointments = Appointment.GetAppointments();
 
                 Appointment.SelectedAppointment = new Appointment((int)AppointmentDGV.CurrentRow.Cells["appointmentId"].Value, (int)AppointmentDGV.CurrentRow.Cells["customerId"].Value, (DateTime)AppointmentDGV.CurrentRow.Cells["start"].Value, (DateTime)AppointmentDGV.CurrentRow.Cells["end"].Value, AppointmentDGV.CurrentRow.Cells["type"].Value.ToString());
 
                 DataTable tempCustomerList = CurrentUser.GetCustomers();
-                DataTable tempAppointmentList = CurrentUser.GetAppointments();
+                DataTable tempAppointmentList = Appointment.GetAppointments();
 
                 foreach (DataRow row in tempCustomerList.Rows)
                 {
@@ -192,7 +192,7 @@ namespace AkariBowens_Sheduling_System
             }
 
             // Resets source for Appointment DataGridView
-            AppointmentDGV.DataSource = CurrentUser.GetAppointments();
+            AppointmentDGV.DataSource = Appointment.GetAppointments();
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

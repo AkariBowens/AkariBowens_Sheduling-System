@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Policy;
@@ -39,6 +40,7 @@ namespace AkariBowens_Sheduling_System.DB
         public string LastUpdatedBy { get; set; }
         
         public static Appointment SelectedAppointment;
+        public static List<Appointment> Appointments { get; set; } = new List<Appointment>();
 
         // ----- Properties ----- //
         public static bool AddAppointment(Appointment appt, Customer customer)
@@ -51,11 +53,11 @@ namespace AkariBowens_Sheduling_System.DB
                 Customer customerForAppt = customer;
 
                 // Converts Appointment start and end times to local and accounts for DST
-                newAppointment.StartTime = TimeZoneInfo.ConvertTimeToUtc(newAppointment.StartTime, TimeZoneInfo.Local);
-                newAppointment.EndTime = TimeZoneInfo.ConvertTimeToUtc(newAppointment.EndTime, TimeZoneInfo.Local);
+                appt.StartTime = TimeZoneInfo.ConvertTimeToUtc(appt.StartTime, TimeZoneInfo.Local);
+                appt.EndTime = TimeZoneInfo.ConvertTimeToUtc(appt.EndTime, TimeZoneInfo.Local);
 
-                newAppointment.CreateDate = TimeZoneInfo.ConvertTimeToUtc(newAppointment.CreateDate, TimeZoneInfo.Local);
-                newAppointment.LastUpdate = TimeZoneInfo.ConvertTimeToUtc(newAppointment.LastUpdate, TimeZoneInfo.Local);
+                appt.CreateDate = TimeZoneInfo.ConvertTimeToUtc(appt.CreateDate, TimeZoneInfo.Local);
+                appt.LastUpdate = TimeZoneInfo.ConvertTimeToUtc(appt.LastUpdate, TimeZoneInfo.Local);
 
                 //Console.WriteLine(custName + " -- in AppAppointment()");
                 //int? customerID;
@@ -70,7 +72,9 @@ namespace AkariBowens_Sheduling_System.DB
 
                     //customerID = Convert.ToInt32(findCustomerID.ExecuteScalar());
 
-                    string ApptAddString = $"INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdby, lastUpdate, lastUpdateBy) VALUES( {customerForAppt.CustomerID}, {newAppointment.UserID}, '{newAppointment.Title}', '{newAppointment.Description}', '{newAppointment.Location}', '{newAppointment.Contact}', '{newAppointment.ApptType}', '{newAppointment.URL}', '{newAppointment.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.CreatedBy}', '{newAppointment.LastUpdate.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.LastUpdatedBy}');";
+                    //string ApptAddString = $"INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdby, lastUpdate, lastUpdateBy) VALUES( {customerForAppt.CustomerID}, {newAppointment.UserID}, '{newAppointment.Title}', '{newAppointment.Description}', '{newAppointment.Location}', '{newAppointment.Contact}', '{newAppointment.ApptType}', '{newAppointment.URL}', '{newAppointment.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.CreatedBy}', '{newAppointment.LastUpdate.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.LastUpdatedBy}');";
+
+                    string ApptAddString = $"INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdby, lastUpdate, lastUpdateBy) VALUES( {customerForAppt.CustomerID}, {appt.UserID}, '{appt.Title}', '{appt.Description}', '{appt.Location}', '{appt.Contact}', '{appt.ApptType}', '{appt.URL}', '{appt.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{appt.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{appt.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")}', '{appt.CreatedBy}', '{appt.LastUpdate.ToString("yyyy-MM-dd HH:mm:ss")}', '{appt.LastUpdatedBy}');";
 
                     MySqlCommand addAppointment = new MySqlCommand(ApptAddString, DBConnection.connect);
                     if (addAppointment.ExecuteNonQuery() == 0)
@@ -78,7 +82,7 @@ namespace AkariBowens_Sheduling_System.DB
                         return false;
                         throw new Exception();
                     }
-                    Console.WriteLine($"Added new appointment with {customerForAppt.CustomerName} on {newAppointment.StartTime.Date.ToString("MM-dd-yyyy")} @{newAppointment.StartTime.TimeOfDay}");
+                    Console.WriteLine($"Added new appointment with {customerForAppt.CustomerName} on {appt.StartTime.Date.ToString("MM-dd-yyyy")} @{appt.StartTime.TimeOfDay}");
                 }
 
                 Customer.SelectedCustomer = null;
@@ -87,6 +91,7 @@ namespace AkariBowens_Sheduling_System.DB
             }
             catch (Exception exc)
             {
+                // Error message
                 Console.WriteLine(exc.Message.ToString(), " --Appointment Adding");
                 return false;
             }
@@ -186,6 +191,146 @@ namespace AkariBowens_Sheduling_System.DB
                 return false;
             }
         }
+
+        public static Appointment NextAppointment;
+        private static void FifteenMinAlert()
+        {
+
+            var query = from Appt in Appointments where Appt.StartTime > DateTime.Now select Appt;
+            //NextAppointment =
+
+            foreach (var Appt in query.AsEnumerable())
+            {
+
+                if (Appt.StartTime > DateTime.Now)
+                {
+                    //if (appt.StartTime.Year == DateTime.Now.Year && appt.StartTime.Month == DateTime.Now.Month && appt.StartTime.Day == DateTime.Now.Day) { 
+                    NextAppointment = new Appointment(Appt.ApptID, Appt.CustID, Appt.StartTime, Appt.EndTime, Appt.ApptType);
+
+                    // Console.WriteLine($"Next appointment: {NextAppointment.StartTime.Date.ToString("MM-dd-yyyy")}");
+
+                    if (NextAppointment.StartTime.Date == DateTime.Now.Date)
+                    {
+                        TimeSpan TimeToNextAppointment = NextAppointment.StartTime - DateTime.Now;
+                        Console.WriteLine($"Minutes until next appointment {TimeToNextAppointment.TotalMinutes}");
+                        if (TimeToNextAppointment.TotalMinutes <= 15)
+                        {
+
+                            // Change custID to customerName
+                            // Fix minutes to single digit, rounded down
+                            MessageBox.Show($"You have an appointment with {NextAppointment.CustID} in {TimeToNextAppointment.TotalMinutes} @{Appt.StartTime.TimeOfDay}!");
+                            return;
+                        }
+                    }
+                }
+            }
+
+
+        }
+        public static DataTable GetAppointments()
+        {
+
+            DataTable ApptQueryResult;
+
+            DataTable AppointmentTable = new DataTable();
+
+            // Only display what's necessary
+            string allAppointmentsQuery = $"SELECT appointmentId, customerId, userId, type, start, end FROM appointment WHERE userId = {CurrentUser.CurrentUserID};";
+            MySqlCommand apptsQuery = new MySqlCommand(allAppointmentsQuery, DBConnection.connect);
+            DBConnection.OpenConnection();
+            using (DBConnection.connect)
+            {
+                MySqlDataAdapter dataAdapter = new MySqlDataAdapter(allAppointmentsQuery, DBConnection.connect);
+                ApptQueryResult = new DataTable();
+
+                dataAdapter.Fill(ApptQueryResult);
+            }
+
+
+            //Processes data from AppointmentTable 
+            var query =
+                    from row in ApptQueryResult.AsEnumerable()
+                    select new
+                    {
+                        ApptID = row.Field<int>("appointmentId"),
+                        CustID = row.Field<int>("customerId"),
+                        UserID = row.Field<int>("userId"),
+                        ApptType = row.Field<string>("type"),
+                        StartTime = row.Field<DateTime>("start"),
+                        EndTime = row.Field<DateTime>("end")
+                    };
+
+            // Change the appearance for the DataTable here vv
+            // i.e. AppointmentTable.Columns.Add("Customer")
+            AppointmentTable = ApptQueryResult.Clone();
+            foreach (var item in query)
+            {
+                // Initializes a new appointment converted to Local time 
+                Appointment newAppt = new Appointment(item.ApptID, item.CustID, TimeZoneInfo.ConvertTimeFromUtc(item.StartTime, TimeZoneInfo.Local), TimeZoneInfo.ConvertTimeFromUtc(item.EndTime, TimeZoneInfo.Local), item.ApptType);
+
+                Appointments.Add(newAppt);
+
+                AppointmentTable.Rows.Add(item.ApptID, item.CustID, item.ApptID, item.ApptType, TimeZoneInfo.ConvertTimeFromUtc(item.StartTime, TimeZoneInfo.Local), TimeZoneInfo.ConvertTimeFromUtc(item.EndTime, TimeZoneInfo.Local));
+            }
+
+            // Change the appearance for the DataTable here vv
+            FifteenMinAlert();
+            //Appointments;
+            return AppointmentTable;
+
+        }
+
+        public static DataTable GetAppointmentsByDate(DateTime date)
+        {
+            //DataTable AppointmentTable;
+
+            DateTime pickedDate = date;
+            DataTable ApptsTable = new DataTable();
+            DataTable ApptsQueryResult;
+
+            // added customerId after it was working already
+            string getbyDate = $"SELECT customerName, customerId, appointmentId, TIME(start), TIME(end), type FROM customer INNER JOIN appointment ON customer.customerId = appointment.customerId WHERE DATE(start) = '{pickedDate.Date.ToString("yyyy-MM-dd")}' AND userId = {CurrentUser.CurrentUserID};";
+
+            DBConnection.OpenConnection();
+
+            MySqlConnection connection = DBConnection.connect;
+
+            using (connection)
+            {
+
+                MySqlDataAdapter mySqlCommand = new MySqlDataAdapter(getbyDate, connection);
+
+                ApptsQueryResult = new DataTable();
+
+                mySqlCommand.Fill(ApptsQueryResult);
+            }
+
+            //Processes data from AppointmentTable 
+            var query =
+                    from row in ApptsQueryResult.AsEnumerable()
+                    select new
+                    {
+                        CustomerName = row.Field<int>("customerName"),
+                        CustID = row.Field<int>("customerId"),
+                        ApptID = row.Field<int>("appointmentId"),
+                        UserID = row.Field<int>("userId"),
+                        ApptType = row.Field<string>("type"),
+                        StartTime = row.Field<DateTime>("start"),
+                        EndTime = row.Field<DateTime>("end")
+                    };
+
+            // Change the appearance for the DataTable here vv
+            // i.e. ApptsTable.Columns.Add("Customer")
+
+            foreach (var item in query)
+            {
+                // Local time changes in here
+                ApptsTable.Rows.Add(item.CustomerName, item.CustID, item.ApptID, TimeZoneInfo.ConvertTimeFromUtc(item.StartTime, TimeZoneInfo.Local), TimeZoneInfo.ConvertTimeFromUtc(item.EndTime, TimeZoneInfo.Local), item.ApptType);
+            }
+
+            return ApptsTable;
+        }
+
 
         // ----- Constructor ----- //
 
