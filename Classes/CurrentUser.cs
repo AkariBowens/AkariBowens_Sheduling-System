@@ -67,39 +67,6 @@ namespace AkariBowens_Sheduling_System.DB
         }
 
 
-        private static void FifteenMinAlert()
-        {
-
-            var query = from Appt in Appointments where Appt.StartTime > DateTime.Now select Appt;
-            //NextAppointment =
-
-            foreach (var Appt in query.AsEnumerable())
-            {
-                
-                if (Appt.StartTime > DateTime.Now)
-                {
-                    //if (appt.StartTime.Year == DateTime.Now.Year && appt.StartTime.Month == DateTime.Now.Month && appt.StartTime.Day == DateTime.Now.Day) { 
-                    NextAppointment = new Appointment(Appt.ApptID, Appt.CustID, Appt.StartTime, Appt.EndTime, Appt.ApptType);
-
-                    // Console.WriteLine($"Next appointment: {NextAppointment.StartTime.Date.ToString("MM-dd-yyyy")}");
-                    
-                    if (NextAppointment.StartTime.Date == DateTime.Now.Date) {
-                        TimeSpan TimeToNextAppointment = NextAppointment.StartTime - DateTime.Now;
-                        Console.WriteLine($"Minutes until next appointment {TimeToNextAppointment.TotalMinutes}");
-                        if (TimeToNextAppointment.TotalMinutes <= 15)
-                        {
-                            
-                            // Change custID to customerName
-                            // Fix minutes to single digit, rounded down
-                            MessageBox.Show($"You have an appointment with {NextAppointment.CustID} in {TimeToNextAppointment.TotalMinutes} @{Appt.StartTime.TimeOfDay}!");
-                            return;
-                        }
-                    }
-                }
-            }
-
-            
-        }
 
         // ----- Constructor ----- //
         public CurrentUser(int currentID, string username, string pass, string location)
@@ -109,7 +76,7 @@ namespace AkariBowens_Sheduling_System.DB
             Password = pass;
             UserLocation = location;
             LogLastLogin();
-            FifteenMinAlert();
+            //FifteenMinAlert();
             Console.WriteLine($"CurrentUser - {CurrentUserID}");
         }
 
