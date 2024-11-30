@@ -174,20 +174,20 @@ namespace AkariBowens_Sheduling_System
 
         private void save_button_Click(object sender, EventArgs e)
         {
-            
-            Customer NewCustomer = new Customer(AddCustomerName, AddCustomerAddress);
+            // Change address to addressID
+            //Customer NewCustomer = new Customer(-1, AddCustomerName, AddCustomerAddress);
            
-            if (Customer.AddCustomer(new Customer(AddCustomerName, AddCustomerAddress), new Address(AddCustomerAddress
-                , AddCustomerPhone)))
-            {
-                Console.WriteLine("Save successful");
+            //if (Customer.AddCustomer(new Customer(AddCustomerName, AddCustomerAddress), new Address(AddCustomerAddress
+            //    , AddCustomerPhone)))
+            //{
+            //    Console.WriteLine("Save successful");
                 
-                Close();
-            } else
-            {
-                Console.WriteLine("Save unsuccessful. Try again");
-                MessageBox.Show("Save unsuccessful. Try again.");
-            }
+            //    Close();
+            //} else
+            //{
+            //    Console.WriteLine("Save unsuccessful. Try again");
+            //    MessageBox.Show("Save unsuccessful. Try again.");
+            //}
         }
 
         

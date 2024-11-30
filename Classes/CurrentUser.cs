@@ -31,7 +31,6 @@ namespace AkariBowens_Sheduling_System.DB
         private static FileStream fileWriter;
         private static FileStream fileReader;
 
-        public static Appointment NextAppointment;
 
         // ----- Methods ----- //
 

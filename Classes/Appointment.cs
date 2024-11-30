@@ -362,8 +362,8 @@ namespace AkariBowens_Sheduling_System.DB
             StartTime =  start;
             EndTime = end;
             
+            // ----- //
             CreateDate = DateTime.Now;
-
             CreatedBy = CurrentUser.UserName.Trim();
             LastUpdate = DateTime.Now;
             LastUpdatedBy = CurrentUser.UserName.Trim();

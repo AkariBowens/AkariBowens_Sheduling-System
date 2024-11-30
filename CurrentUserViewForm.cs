@@ -122,8 +122,8 @@ namespace AkariBowens_Sheduling_System
                 AddAppointmentForm addAppointment = new AddAppointmentForm();
 
                 // Customer constructor
-                Customer.SelectedCustomer = new Customer(CustomerDGV.CurrentRow.Cells["customerName"].Value.ToString(), CustomerDGV.CurrentRow.Cells["address"].Value.ToString());
-                Customer.SelectedCustomer.CustomerID = Convert.ToInt32(CustomerDGV.CurrentRow.Cells["customerId"].Value);
+                Customer.SelectedCustomer = new Customer((int)CustomerDGV.CurrentRow.Cells["customerId"].Value, CustomerDGV.CurrentRow.Cells["customerName"].Value.ToString(), (int)CustomerDGV.CurrentRow.Cells["addressId"].Value);
+                
                 //addAppointment.isNewAppt = true;
                 addAppointment.Show();
 
@@ -177,8 +177,7 @@ namespace AkariBowens_Sheduling_System
                         {
                             Console.WriteLine(row["customerName"].ToString() + " --custName");
 
-                            // Going to have to change after Constructor update
-                            Customer.SelectedCustomer = new Customer(row["customerName"].ToString(), row["address"].ToString());
+                            Customer.SelectedCustomer = new Customer((int)row["customerId"], row["customerName"].ToString(), (int)row["addressId"]);
                         }
                     }
                 }

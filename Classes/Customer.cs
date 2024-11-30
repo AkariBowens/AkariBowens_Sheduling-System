@@ -20,7 +20,7 @@ namespace AkariBowens_Sheduling_System.DB
         // ----- Properties ----- //
         public int CustomerID { get; set; }
         public string CustomerName { get; set; }
-        public string AddressID { get; set; }
+        public int AddressID { get; set; }
 
         // Cast as bool
         public int Active { get; set; }
@@ -153,7 +153,7 @@ namespace AkariBowens_Sheduling_System.DB
             // addressId
 
 
-            string allCustomersQuery = $"SELECT customerId, customerName, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
+            string allCustomersQuery = $"SELECT customerId, customerName, addressId, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
 
             //string allCustsQuery = $"SELECT customername, customerId, address, addressId, city, country FROM customer INNER JOIN address ON customer.customerId = address.customerId WHERE appointment.userId = {CurrentUserID}";
             //$"WHERE userId = {CurrentUserID};";
@@ -174,20 +174,15 @@ namespace AkariBowens_Sheduling_System.DB
         // Reads list of arguments
 
         // ----- Constructor ----- //
-        public Customer( string custName, string custAddr) 
+        public Customer( int custID, string custName, int addressId) 
         {
+            CustomerID = custID;
             CustomerName = custName;
+            AddressID = addressId;
 
-            // Define address id later
-            AddressID = Convert.ToString(Address.FindAddressId(custAddr));
-            
-            // if (active.ToLower() = "false") { Active = 0 } elif (active.ToLower() == "true") { Active = 1 }
-   
+            // ----- //
             Active = 1;
-
             CreateDate = DateTime.Now;
-            Console.WriteLine(CreateDate);
-            
             CreatedBy = "Admin";
             LastUpdate = DateTime.Now;
             LastUpdatedBy = "Admin";

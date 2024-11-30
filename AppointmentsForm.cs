@@ -87,7 +87,7 @@ namespace AkariBowens_Sheduling_System
                             Console.WriteLine(row["customerName"].ToString() + " --custName");
 
                             // Going to have to change after Constructor update
-                            Customer.SelectedCustomer = new Customer(row["customerName"].ToString(), row["address"].ToString());
+                            Customer.SelectedCustomer = new Customer((int)row["customerID"], row["customerName"].ToString(), (int)row["addressId"]);
                         }
                     }
                 }
