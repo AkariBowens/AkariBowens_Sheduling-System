@@ -5,6 +5,7 @@ using Mysqlx.Crud;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Cryptography.X509Certificates;
@@ -20,16 +21,14 @@ namespace AkariBowens_Sheduling_System.DB
         public int CustomerID { get; set; }
         public string CustomerName { get; set; }
         public string AddressID { get; set; }
-        
 
         // Cast as bool
         public int Active { get; set; }
         public DateTime CreateDate { get; set; }
         public static string dateFormat = @"yyyy-MM-dd hh:mm:ss";
-        // Hard-code this
+
         public string CreatedBy { get; set; }
-        // is TIMESTAMP() - numbers
-        
+
         public DateTime LastUpdate { get; set; } 
         // Hard-code this
         public string LastUpdatedBy { get; set; }
@@ -38,6 +37,23 @@ namespace AkariBowens_Sheduling_System.DB
 
         // not needed
         //public static int GlobalCustomerID { get; set; } = 50;
+
+        public static DataTable Customers
+        {
+            get { GetCustomers(); return Customers; }
+            set { GetCustomers(); }
+
+            //{ 
+            // SQL Query result here
+
+            // - add all to an sql query class... i.e. GetCustomers(), GetAppointments(), DeleteCustomer(), DeleteAppointment() or.. DeleteCommand(var customer/appointment, int selectedId){sql query string with 2 input options}
+            // allAppointmentsQuery = $"SELECT * FROM Appointments WHERE userId = {CurrentUserID};";
+            //MySqlCommand apptsQuery = new MySqlCommand()    
+            //};
+
+
+
+        }
 
         // List of args
         private List<string> ArgsList { get; set; }
@@ -123,12 +139,41 @@ namespace AkariBowens_Sheduling_System.DB
                 return false;
             }
         }
-        
+
         // public static UpdateCustomer(){}
+
+        public static DataTable GetCustomers()
+        {
+
+            DataTable CustomerList;
+
+            // Rewrite this to return address, city, country instead of addressId & where appointmentId is the source of the customer
+            //string allCustomersQuery = $"SELECT customerId, customerName, address, city, country FROM customer INNER JOIN address ON customer.addressId = address.addressId INNER JOIN address INNER JOIN city ON address.cityId = city.cityId INNER JOIN country ON city.countryId = country.countryId;"
+
+            // addressId
+
+
+            string allCustomersQuery = $"SELECT customerId, customerName, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
+
+            //string allCustsQuery = $"SELECT customername, customerId, address, addressId, city, country FROM customer INNER JOIN address ON customer.customerId = address.customerId WHERE appointment.userId = {CurrentUserID}";
+            //$"WHERE userId = {CurrentUserID};";
+            MySqlCommand customersQuery = new MySqlCommand(allCustomersQuery, DBConnection.connect);
+            DBConnection.OpenConnection();
+            // Only display what's necessary
+            using (DBConnection.connect)
+            {
+                MySqlDataAdapter dataAdapter = new MySqlDataAdapter(allCustomersQuery, DBConnection.connect);
+                CustomerList = new DataTable();
+
+                dataAdapter.Fill(CustomerList);
+            }
+
+            return CustomerList;
+        }
 
         // Reads list of arguments
 
-            // ----- Constructor ----- //
+        // ----- Constructor ----- //
         public Customer( string custName, string custAddr) 
         {
             CustomerName = custName;

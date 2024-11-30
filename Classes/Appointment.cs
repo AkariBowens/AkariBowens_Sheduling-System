@@ -32,9 +32,8 @@ namespace AkariBowens_Sheduling_System.DB
 
         // Hard code all the properties below - except LastUpdate()
         public DateTime CreateDate { get; set; }
-        // Hard-code this
         public string CreatedBy { get; set; }
-        // is TIMESTAMP() - numbers
+
         public DateTime LastUpdate { get; set; }
         // Hard-code this
         public string LastUpdatedBy { get; set; }
@@ -331,7 +330,6 @@ namespace AkariBowens_Sheduling_System.DB
             return ApptsTable;
         }
 
-
         // ----- Constructor ----- //
 
         public Appointment(int apptId, int custId, DateTime start, DateTime end, string apptType)
@@ -372,10 +370,5 @@ namespace AkariBowens_Sheduling_System.DB
         }
         // ----- Static Class ----- //
 
-        // Fits better in CurrentUser
-        static Appointment()
-        {
-
-        }
     }
 }

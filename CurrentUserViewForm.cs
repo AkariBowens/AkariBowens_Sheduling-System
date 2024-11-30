@@ -51,7 +51,7 @@ namespace AkariBowens_Sheduling_System
                     }  
                         
                     CustomerDGV.ResetBindings();
-                    CustomerDGV.DataSource = CurrentUser.GetCustomers();
+                    CustomerDGV.DataSource = Customer.GetCustomers();
 
                 }
                
@@ -85,7 +85,7 @@ namespace AkariBowens_Sheduling_System
         {
 
             // ----- Customer DGV ----- //
-            CustomerDGV.DataSource = CurrentUser.GetCustomers();
+            CustomerDGV.DataSource = Customer.GetCustomers();
             CustomerDGV.MultiSelect = false;
             CustomerDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             CustomerDGV.ReadOnly = true;
@@ -166,7 +166,7 @@ namespace AkariBowens_Sheduling_System
 
                 Appointment.SelectedAppointment = new Appointment((int)AppointmentDGV.CurrentRow.Cells["appointmentId"].Value, (int)AppointmentDGV.CurrentRow.Cells["customerId"].Value, (DateTime)AppointmentDGV.CurrentRow.Cells["start"].Value, (DateTime)AppointmentDGV.CurrentRow.Cells["end"].Value, AppointmentDGV.CurrentRow.Cells["type"].Value.ToString());
 
-                DataTable tempCustomerList = CurrentUser.GetCustomers();
+                DataTable tempCustomerList = Customer.GetCustomers();
                 DataTable tempAppointmentList = Appointment.GetAppointments();
 
                 foreach (DataRow row in tempCustomerList.Rows)

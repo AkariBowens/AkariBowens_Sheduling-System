@@ -75,7 +75,7 @@ namespace AkariBowens_Sheduling_System
                 Appointment.SelectedAppointment = new Appointment((int)appointments_DGV.CurrentRow.Cells["appointmentId"].Value, (int)appointments_DGV.CurrentRow.Cells["customerId"].Value, (DateTime)appointments_DGV.CurrentRow.Cells["start"].Value, (DateTime)appointments_DGV.CurrentRow.Cells["end"].Value, appointments_DGV.CurrentRow.Cells["type"].Value.ToString());
 
 
-                DataTable tempCustomerList = CurrentUser.GetCustomers();
+                DataTable tempCustomerList = Customer.GetCustomers();
                 DataTable tempAppointmentList = Appointment.GetAppointmentsByDate(SelectedDate);
 
                 foreach (DataRow row in tempCustomerList.Rows)
