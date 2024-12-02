@@ -194,13 +194,11 @@ namespace AkariBowens_Sheduling_System.DB
         public static Appointment NextAppointment;
         private static void FifteenMinAlert()
         {
-
             var query = from Appt in Appointments where Appt.StartTime > DateTime.Now select Appt;
             //NextAppointment =
 
             foreach (var Appt in query.AsEnumerable())
             {
-
                 if (Appt.StartTime > DateTime.Now)
                 {
                     //if (appt.StartTime.Year == DateTime.Now.Year && appt.StartTime.Month == DateTime.Now.Month && appt.StartTime.Day == DateTime.Now.Day) { 
@@ -223,8 +221,6 @@ namespace AkariBowens_Sheduling_System.DB
                     }
                 }
             }
-
-
         }
         public static DataTable GetAppointments()
         {

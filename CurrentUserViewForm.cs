@@ -91,12 +91,17 @@ namespace AkariBowens_Sheduling_System
             CustomerDGV.ReadOnly = true;
             CustomerDGV.AllowUserToAddRows = false;
 
+            // Change after I fix address
+            CustomerDGV.Columns["address"].Visible = false;
+
             // ----- Appointment DGV ----- //
             AppointmentDGV.DataSource = Appointment.GetAppointments();
             AppointmentDGV.MultiSelect = false;
             AppointmentDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             AppointmentDGV.ReadOnly = true;
             AppointmentDGV.AllowUserToAddRows = false;
+
+            AppointmentDGV.Columns["userId"].Visible = false;
 
         }
 
