@@ -175,15 +175,17 @@ namespace AkariBowens_Sheduling_System
         private void save_button_Click(object sender, EventArgs e)
         {
             // Change address to addressID
+
             //Customer NewCustomer = new Customer(-1, AddCustomerName, AddCustomerAddress);
-           
+
             //if (Customer.AddCustomer(new Customer(AddCustomerName, AddCustomerAddress), new Address(AddCustomerAddress
             //    , AddCustomerPhone)))
             //{
             //    Console.WriteLine("Save successful");
-                
+
             //    Close();
-            //} else
+            //}
+            //else
             //{
             //    Console.WriteLine("Save unsuccessful. Try again");
             //    MessageBox.Show("Save unsuccessful. Try again.");

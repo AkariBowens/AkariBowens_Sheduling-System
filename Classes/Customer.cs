@@ -153,7 +153,7 @@ namespace AkariBowens_Sheduling_System.DB
             // addressId
 
 
-            string allCustomersQuery = $"SELECT customerId, customerName, addressId, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
+            string allCustomersQuery = $"SELECT customerId, customerName, address.addressId, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
 
             //string allCustsQuery = $"SELECT customername, customerId, address, addressId, city, country FROM customer INNER JOIN address ON customer.customerId = address.customerId WHERE appointment.userId = {CurrentUserID}";
             //$"WHERE userId = {CurrentUserID};";

@@ -39,7 +39,7 @@
             // 
             // login_button
             // 
-            this.login_button.Location = new System.Drawing.Point(63, 296);
+            this.login_button.Location = new System.Drawing.Point(41, 260);
             this.login_button.Margin = new System.Windows.Forms.Padding(4);
             this.login_button.Name = "login_button";
             this.login_button.Size = new System.Drawing.Size(94, 44);
@@ -52,7 +52,7 @@
             // 
             this.username_label.AutoSize = true;
             this.username_label.Font = new System.Drawing.Font("Gadugi", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.username_label.Location = new System.Drawing.Point(46, 154);
+            this.username_label.Location = new System.Drawing.Point(35, 127);
             this.username_label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.username_label.Name = "username_label";
             this.username_label.Size = new System.Drawing.Size(66, 16);
@@ -63,7 +63,7 @@
             // 
             this.password_label.AutoSize = true;
             this.password_label.Font = new System.Drawing.Font("Gadugi", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.password_label.Location = new System.Drawing.Point(46, 215);
+            this.password_label.Location = new System.Drawing.Point(35, 188);
             this.password_label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.password_label.Name = "password_label";
             this.password_label.Size = new System.Drawing.Size(63, 16);
@@ -73,20 +73,21 @@
             // username_textBox
             // 
             this.username_textBox.Font = new System.Drawing.Font("Gadugi", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.username_textBox.Location = new System.Drawing.Point(135, 148);
+            this.username_textBox.Location = new System.Drawing.Point(124, 121);
             this.username_textBox.Margin = new System.Windows.Forms.Padding(4);
             this.username_textBox.Name = "username_textBox";
-            this.username_textBox.Size = new System.Drawing.Size(192, 25);
+            this.username_textBox.Size = new System.Drawing.Size(165, 25);
             this.username_textBox.TabIndex = 3;
             this.username_textBox.TextChanged += new System.EventHandler(this.username_textBox_TextChanged);
             // 
             // password_textBox
             // 
             this.password_textBox.Font = new System.Drawing.Font("Gadugi", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.password_textBox.Location = new System.Drawing.Point(135, 209);
+            this.password_textBox.Location = new System.Drawing.Point(124, 182);
             this.password_textBox.Margin = new System.Windows.Forms.Padding(4);
             this.password_textBox.Name = "password_textBox";
-            this.password_textBox.Size = new System.Drawing.Size(192, 25);
+            this.password_textBox.PasswordChar = '*';
+            this.password_textBox.Size = new System.Drawing.Size(165, 25);
             this.password_textBox.TabIndex = 4;
             this.password_textBox.TextChanged += new System.EventHandler(this.password_textBox_TextChanged);
             // 
@@ -102,7 +103,7 @@
             // 
             // cancel_button
             // 
-            this.cancel_button.Location = new System.Drawing.Point(206, 296);
+            this.cancel_button.Location = new System.Drawing.Point(184, 260);
             this.cancel_button.Margin = new System.Windows.Forms.Padding(4);
             this.cancel_button.Name = "cancel_button";
             this.cancel_button.Size = new System.Drawing.Size(94, 44);
@@ -115,7 +116,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(372, 413);
+            this.ClientSize = new System.Drawing.Size(326, 370);
             this.Controls.Add(this.cancel_button);
             this.Controls.Add(this.login_label);
             this.Controls.Add(this.password_textBox);

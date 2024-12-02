@@ -58,6 +58,8 @@ namespace AkariBowens_Sheduling_System.DB
             using (StreamReader reader = new StreamReader(fileReader))
             {
                 // make this read the very last line of the file
+                //fileReader.Position = fileReader.Length - 1;
+                
                 data = reader.ReadLine();
             }
             Console.WriteLine(data + " -- from fileStream");
