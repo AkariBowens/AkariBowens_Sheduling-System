@@ -53,7 +53,7 @@ namespace AkariBowens_Sheduling_System
                 // test if it only contains dashes or dashes
                 foreach (char item in phone_textBox.Text)
                 {
-                    if ((item > '0' || item < '9') || item == (char)45)
+                    if ((item >= '0' && item <= '9') || item == (char)45)
                     {
                         continue;
                     }else
@@ -150,18 +150,18 @@ namespace AkariBowens_Sheduling_System
         private void AddCustomer_Load(object sender, EventArgs e)
         {
             
-            if (isNewCustomer == false)
-            {
-                //  load with modify/update label and prefilled date from list w/ all customers related to {CurrentUser.UserId}
+            //if (isNewCustomer == false)
+            //{
+            //    //  load with modify/update label and prefilled date from list w/ all customers related to {CurrentUser.UserId}
 
-                // -- Changes title -- //
-                variable_text_label.Text = "Update";
+            //    // -- Changes title -- //
+            //    variable_text_label.Text = "Update";
 
-                // -- Prefills textboxes -- //
-                name_textBox.Text = Customer.SelectedCustomer.CustomerName;
-                address_textBox.Text = Customer.SelectedCustomer.AddressID.ToString();
-                phone_textBox.Text = Address.SelectedAddress.Phone;
-            }
+            //    // -- Prefills textboxes -- //
+            //    name_textBox.Text = Customer.SelectedCustomer.CustomerName;
+            //    address_textBox.Text = Customer.SelectedCustomer.AddressID.ToString();
+            //    phone_textBox.Text = Address.SelectedAddress.Phone;
+            //}
 
             // Changes after input detected in all 3 fields
             save_button.Enabled = false;
@@ -174,9 +174,27 @@ namespace AkariBowens_Sheduling_System
 
         private void save_button_Click(object sender, EventArgs e)
         {
+            Console.WriteLine($"Save button. {AddCustomerName} {AddCustomerPhone} {AddCustomerAddress}");
             // Change address to addressID
+            // if (Address.Check(AddCustomerAddress)){
+            // AddCustomerAddress = address_textBox.text
+            // no -- 
+            // }
 
-            //Customer NewCustomer = new Customer(-1, AddCustomerName, AddCustomerAddress);
+            // Just add an address each time, so 
+            // Address.AddAddress(AddCustomerAddress);
+            // Address.GetAddressIDByPhoneAndAddressName(string phone, string addressname);
+            // - returns int
+            // -- put this^ in customer declaration
+            // add address, get id 
+            Address NewAddress = new Address(AddCustomerPhone, AddCustomerAddress);
+            Customer NewCustomer = new Customer(-1, AddCustomerName, -1);
+
+            if (Customer.AddCustomer(NewCustomer, NewAddress))
+            {
+                Console.WriteLine($"Added new customer: {NewCustomer.CustomerName}");
+                Close();
+            }
 
             //if (Customer.AddCustomer(new Customer(AddCustomerName, AddCustomerAddress), new Address(AddCustomerAddress
             //    , AddCustomerPhone)))

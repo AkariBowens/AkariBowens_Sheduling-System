@@ -50,6 +50,7 @@
             // phone_textBox
             // 
             this.phone_textBox.Location = new System.Drawing.Point(75, 199);
+            this.phone_textBox.MaxLength = 8;
             this.phone_textBox.Name = "phone_textBox";
             this.phone_textBox.Size = new System.Drawing.Size(186, 20);
             this.phone_textBox.TabIndex = 1;

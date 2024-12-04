@@ -78,7 +78,8 @@ namespace AkariBowens_Sheduling_System.DB
 
                 // -- Add On -- //
                 // Do address ID logic
-                string customerInsertstring = $"INSERT INTO customer(customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdatedBy) VALUES({newCust.CustomerName}, {newCust.AddressID}, {newCust.Active}, {newCust.CreateDate}, {newCust.CreatedBy}, {newCust.LastUpdate}, {newCust.LastUpdatedBy});";
+                // Change addressId = 1 to something else
+                string customerInsertstring = $"INSERT INTO customer(customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES('{newCust.CustomerName}', 1, {newCust.Active}, '{newCust.CreateDate.ToString("yyyy-MM-dd")}', '{newCust.CreatedBy}', '{newCust.LastUpdate.ToString("yyyy-MM-dd")}', '{newCust.LastUpdatedBy}');";
                 
                 MySqlCommand insertCustomer = new MySqlCommand(customerInsertstring, connection);
 
@@ -86,10 +87,11 @@ namespace AkariBowens_Sheduling_System.DB
                 if (insertCustomer.ExecuteNonQuery() == 0)
                 {
                     Console.WriteLine($"Adding customer failed!");
+                   
                     throw new Exception("Insert Failed!");
                 }
 
-                Console.WriteLine($"Added new customer {newCust.CustomerName}");
+                Console.WriteLine($"Added new customer {newCust.CustomerName}.");
                 return true;
                 
             } catch (Exception ArgumentException)
@@ -150,7 +152,6 @@ namespace AkariBowens_Sheduling_System.DB
 
             DataTable CustomerList = new DataTable();
 
-
             string allCustomersQuery = $"SELECT customerId, customerName, address.addressId, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
 
             MySqlCommand customersQuery = new MySqlCommand(allCustomersQuery, DBConnection.connect);
@@ -187,6 +188,36 @@ namespace AkariBowens_Sheduling_System.DB
             }
 
             return CustomerList;
+        }
+
+        public static Customer GetCustomerByID(int CustID)
+        {
+            DataTable tempDT = GetCustomers();
+
+            Customer newCust = new Customer(CustID, "not found", -1);
+
+            var query =
+                from row in tempDT.AsEnumerable()
+                where (int)row["customerId"] == CustID
+                select new
+                {
+                    CustomerID = row.Field<int>("customerId"),
+                    CustomerName = row.Field<string>("customerName"),
+                    AddressID = row.Field<int>("addressId")
+                };
+
+
+            
+            if (query.Count() == 1)
+            {
+                foreach (var item in query)
+                {
+                    newCust = new Customer(item.CustomerID, item.CustomerName, item.AddressID);
+                }
+            }
+            
+            return newCust;
+            
         }
 
         // ----- Constructor ----- //

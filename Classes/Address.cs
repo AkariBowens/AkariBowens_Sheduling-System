@@ -34,7 +34,27 @@ namespace AkariBowens_Sheduling_System.Classes
         public string LastUpdatedBy { get; set; }
 
         // ----- Methods ----- //
-        public static bool AddAddress(string addrName, string phone) { return true; }
+        public static bool AddAddress(string addrName, string phone) 
+        {
+
+            Address tempAddress = new Address(addrName, phone);
+            string addressAddString = $"INSERT INTO address VALUES(null, {tempAddress.AddressName}, null, {tempAddress.CityId}, 11114, '{tempAddress.Phone}')";
+
+            MySqlCommand insertAddress = new MySqlCommand(addressAddString, DBConnection.connect);
+            DBConnection.OpenConnection();
+
+            MySqlConnection connection = DBConnection.connect;
+            using (connection)
+            {
+                if (insertAddress.ExecuteNonQuery() == 0)
+                {
+                    Console.WriteLine($"Adding address failed!");
+                    throw new Exception("Insert Failed!");
+                }
+            }
+
+            return true;
+        }
         public static string FindAddress(int addrID) { return ""; }
         
         //Delete
@@ -93,17 +113,25 @@ namespace AkariBowens_Sheduling_System.Classes
 
             // Update later
             //CityId = cityId;
+            
+            // ---------- //
             CityId = 1;
 
             //PostalCode = postalCode;
             PostalCode = GlobalPostalCode++.ToString();
+            Phone = phone;
 
-            // phone needs to be formatted
-            //Phone = phone;
-            Phone = "222-222-2222";
+            // ----- //
+            CreateDate = DateTime.Now;
+            CreatedBy = "Admin";
+            LastUpdate = DateTime.Now;
+            LastUpdatedBy = "Admin";
         }
 
-        public static Address SelectedAddress { get; set; }
-
+        //public static Address SelectedAddress { get; set; }
     }
+
+
+
+
 }

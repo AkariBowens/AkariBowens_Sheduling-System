@@ -133,6 +133,9 @@ namespace AkariBowens_Sheduling_System
                 addAppointment.Show();
 
                 //Customer.SelectedCustomer = null;
+
+               
+                // I just need to update the DGV
             }
             else {
                 MessageBox.Show("Select or add a new customer!");

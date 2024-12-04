@@ -78,8 +78,9 @@ namespace AkariBowens_Sheduling_System.DB
                     MySqlCommand addAppointment = new MySqlCommand(ApptAddString, DBConnection.connect);
                     if (addAppointment.ExecuteNonQuery() == 0)
                     {
-                        return false;
-                        throw new Exception();
+                        //return false;
+                        Console.WriteLine($"Adding appointment failed!");
+                        throw new Exception("Adding appointment failed!");
                     }
                     Console.WriteLine($"Added new appointment with {customerForAppt.CustomerName} on {appt.StartTime.Date.ToString("MM-dd-yyyy")} @{appt.StartTime.TimeOfDay}");
                 }
