@@ -210,8 +210,6 @@ namespace AkariBowens_Sheduling_System
         {
             try
             {
-                // Makes start and end are on the same date
-                //AddApptEnd = new DateTime(AddApptStart.Year, AddApptStart.Month, AddApptStart.Day, AddApptEnd.Hour, AddApptEnd.Minute, AddApptEnd.Second);
 
                 Console.WriteLine(Customer.SelectedCustomer.CustomerID + " -- Customer Id");
                 // Instantiates new Appointment to be added

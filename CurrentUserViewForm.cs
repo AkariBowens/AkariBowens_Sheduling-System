@@ -74,6 +74,7 @@ namespace AkariBowens_Sheduling_System
             // Opens a new add customer form 
             AddCustomer addCustomer = new AddCustomer();
             addCustomer.Show();
+            CustomerDGV.ResetBindings();
         }
 
         private void CustomerDGV_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
