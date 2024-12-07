@@ -71,8 +71,6 @@ namespace AkariBowens_Sheduling_System.DB
 
                     //customerID = Convert.ToInt32(findCustomerID.ExecuteScalar());
 
-                    //string ApptAddString = $"INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdby, lastUpdate, lastUpdateBy) VALUES( {customerForAppt.CustomerID}, {newAppointment.UserID}, '{newAppointment.Title}', '{newAppointment.Description}', '{newAppointment.Location}', '{newAppointment.Contact}', '{newAppointment.ApptType}', '{newAppointment.URL}', '{newAppointment.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.CreatedBy}', '{newAppointment.LastUpdate.ToString("yyyy-MM-dd HH:mm:ss")}', '{newAppointment.LastUpdatedBy}');";
-
                     string ApptAddString = $"INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdby, lastUpdate, lastUpdateBy) VALUES( {customerForAppt.CustomerID}, {appt.UserID}, '{appt.Title}', '{appt.Description}', '{appt.Location}', '{appt.Contact}', '{appt.ApptType}', '{appt.URL}', '{appt.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{appt.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{appt.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")}', '{appt.CreatedBy}', '{appt.LastUpdate.ToString("yyyy-MM-dd HH:mm:ss")}', '{appt.LastUpdatedBy}');";
 
                     MySqlCommand addAppointment = new MySqlCommand(ApptAddString, DBConnection.connect);

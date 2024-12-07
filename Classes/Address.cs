@@ -4,10 +4,13 @@ using Mysqlx;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace AkariBowens_Sheduling_System.Classes
 {
@@ -17,8 +20,9 @@ namespace AkariBowens_Sheduling_System.Classes
         public int AddressID { get; set; }
         public string AddressName { get; set; }
 
-        public string AddressName2 { get; set; } = null;
+        public string AddressName2 { get; set; } 
         public int CityId {get; set; }
+       
         public string PostalCode { get; set; }
         public static int GlobalPostalCode { get; set; } = 22222;
 
@@ -33,15 +37,26 @@ namespace AkariBowens_Sheduling_System.Classes
         // Hard-code this
         public string LastUpdatedBy { get; set; }
 
+        
+        // public static List<Address> Addresses { get; set; } = new List<Address>();
+
+        public static Address SelectedAddress { get; set; }
+
         // ----- Methods ----- //
-        public static bool AddAddress(string addrName, string phone) 
+
+        public static bool AddAddress(Address address) 
         {
+            
+            Address tempAddress = new Address(-1, address.AddressName, address.Phone);
 
-            Address tempAddress = new Address(addrName, phone);
-            string addressAddString = $"INSERT INTO address VALUES(null, {tempAddress.AddressName}, null, {tempAddress.CityId}, 11114, '{tempAddress.Phone}')";
+            
+            tempAddress.CityId = 1;
+            // change ZipCode and CityId
+            // address and phone are swapped
+            string addressAddString = $"INSERT INTO address(address, address2, cityId, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES('{tempAddress.AddressName}', '{tempAddress.AddressName2}', {tempAddress.CityId}, '{tempAddress.PostalCode}', '{tempAddress.Phone}', '{tempAddress.CreateDate.Date.ToString("yyyy-MM-dd HH:mm:ss")}', '{tempAddress.CreatedBy}','{tempAddress.LastUpdate.Date.ToString("yyyy-MM-dd HH:mm:ss")}', '{tempAddress.LastUpdatedBy}')";
 
-            MySqlCommand insertAddress = new MySqlCommand(addressAddString, DBConnection.connect);
             DBConnection.OpenConnection();
+            MySqlCommand insertAddress = new MySqlCommand(addressAddString, DBConnection.connect);
 
             MySqlConnection connection = DBConnection.connect;
             using (connection)
@@ -53,46 +68,38 @@ namespace AkariBowens_Sheduling_System.Classes
                 }
             }
 
+            Customer.GetCustomers();
             return true;
         }
         public static string FindAddress(int addrID) { return ""; }
         
         //Delete
-        public static int FindAddressId(string addrName)
+        public static int FindAddressId(string addrName, string phone)
         {
             try
             {
-                //string address = addrName;
-                string address = "123 Main";
-                object queryResult;
+                DataTable AddressList = GetAddresses();
+                
+                string addressName = addrName;
+                string AddrPhone = phone;
+                Console.WriteLine($"Phone: {AddrPhone}; Address: {addressName}; FindAddressID...89");
 
-                string getAddressIdString = $"SELECT addressId, address FROM address WHERE UPPER(address) = '{address.ToUpper()}';";
-                MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["localdb"].ConnectionString);
-                MySqlCommand addressIDQuery = new MySqlCommand(getAddressIdString, connection);
+                string addressIDQuery = $"SELECT addressId FROM address WHERE address = '{addressName}' and phone = '{AddrPhone}'";
 
                 DBConnection.OpenConnection();
+                MySqlCommand getAddressID = new MySqlCommand(addressIDQuery, DBConnection.connect);
 
-                using (connection)
+                int AddrId;
+
+                using (DBConnection.connect)
                 {
-                    DBConnection.OpenConnection();
-                    queryResult = addressIDQuery.ExecuteScalar();
-
-                    if (queryResult.GetType() != null || queryResult != DBNull.Value)
-                    {
-                        // return address here
-                        return Convert.ToInt32(queryResult);
-                    }
-                    else
-                    {
-
-                        Console.WriteLine("Query result null");
-                        return -1;
-                    }
+                    var result = getAddressID.ExecuteScalar();
+                    AddrId = Convert.ToInt32(result);
                 }
-                // Console.WriteLine("AddressId query result" + queryResult);
 
-                // If the query returns a null result
-                
+                Console.WriteLine(AddrId + " -- AddressID in Find ID");
+                return AddrId;
+
             } catch (Exception exc)
             {
                 Console.WriteLine(exc.Message.ToString());
@@ -102,18 +109,14 @@ namespace AkariBowens_Sheduling_System.Classes
 
         // ----- Constructor ----- //
 
-        // get id on creation?/
-
-        // , int cityId, string postalCode
-        // int addressId,
-        public Address(string addressName, string phone)
+        public Address(int addressId, string addressName, string phone)
         {
-            //AddressID = 4;       
+            AddressID = addressId;       
             AddressName = addressName;
 
             // Update later
             //CityId = cityId;
-            
+            AddressName2 = string.Empty;
             // ---------- //
             CityId = 1;
 
@@ -128,6 +131,45 @@ namespace AkariBowens_Sheduling_System.Classes
             LastUpdatedBy = "Admin";
         }
 
+
+        public static DataTable GetAddresses()
+        {
+            DataTable result = new DataTable();
+            DataTable AddressTable = new DataTable();
+
+            string addressQuery =  $"SELECT addressId, address, cityId, postalCode, phone from address";
+
+            DBConnection.OpenConnection();
+            MySqlCommand getAddresses = new MySqlCommand(addressQuery, DBConnection.connect);
+
+            using (DBConnection.connect)
+            {
+                MySqlDataAdapter mySqlDataAdapter = new MySqlDataAdapter(addressQuery, DBConnection.connect);
+                mySqlDataAdapter.Fill(result);
+                
+            }
+
+            AddressTable = result.Clone();
+
+            var query = from row in result.AsEnumerable()
+                        select new
+                        {
+                            
+                            AddressID = row.Field<int>("addressId"),
+                            AddressName = row.Field<string>("address"),
+                            CityId = row.Field<int>("cityId"),
+                            PostalCode = row.Field<string>("postalCode"),
+                            Phone = row.Field<string>("phone")
+                        };
+
+
+            foreach(var item in query)
+            {
+                AddressTable.Rows.Add(item.AddressID, item.AddressName, item.CityId, item.PostalCode, item.Phone);
+            }
+
+            return AddressTable;
+        }
         //public static Address SelectedAddress { get; set; }
     }
 

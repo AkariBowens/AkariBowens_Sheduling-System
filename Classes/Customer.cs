@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Cryptography.X509Certificates;
@@ -35,25 +36,6 @@ namespace AkariBowens_Sheduling_System.DB
 
         public static Customer SelectedCustomer { get; set; }
 
-        // not needed
-        //public static int GlobalCustomerID { get; set; } = 50;
-
-        //public static DataTable Customers
-        //{
-        //    get { GetCustomers(); return Customers; }
-        //    set { GetCustomers(); }
-
-        //    //{ 
-        //    // SQL Query result here
-
-        //    // - add all to an sql query class... i.e. GetCustomers(), GetAppointments(), DeleteCustomer(), DeleteAppointment() or.. DeleteCommand(var customer/appointment, int selectedId){sql query string with 2 input options}
-        //    // allAppointmentsQuery = $"SELECT * FROM Appointments WHERE userId = {CurrentUserID};";
-        //    //MySqlCommand apptsQuery = new MySqlCommand()    
-        //    //};
-
-
-
-        //}
         public static List<Customer> Customers { get; set; } = new List<Customer>();
 
         // List of args
@@ -70,16 +52,24 @@ namespace AkariBowens_Sheduling_System.DB
                 // Initializes new 'Customer' instance
                 Customer newCustomer = newCust;
 
-                // Initializes new 'Address' instance
-                Address address = newAddr;
-
+                
+                // Adding a Customer
                 DBConnection.OpenConnection();
                 MySqlConnection connection = DBConnection.connect;
 
                 // -- Add On -- //
                 // Do address ID logic
                 // Change addressId = 1 to something else
-                string customerInsertstring = $"INSERT INTO customer(customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES('{newCust.CustomerName}', 1, {newCust.Active}, '{newCust.CreateDate.ToString("yyyy-MM-dd")}', '{newCust.CreatedBy}', '{newCust.LastUpdate.ToString("yyyy-MM-dd")}', '{newCust.LastUpdatedBy}');";
+                string customerInsertstring = 
+                    $"INSERT INTO customer(customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy) " +
+                    $"VALUES('{newCust.CustomerName}', " +
+                    // Update below to {address.AddressID} or SELECT addressId FROM address WHERE address = {address.AddressName} and phone = {address.Phone}
+                    $"{newCust.AddressID}, " +
+                    $"{newCust.Active}, " +
+                    $"'{newCust.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")}', " +
+                    $"'{newCust.CreatedBy}', " +
+                    $"'{newCust.LastUpdate.ToString("yyyy-MM-dd HH:mm:ss")}', " +
+                    $"'{newCust.LastUpdatedBy}');";
                 
                 MySqlCommand insertCustomer = new MySqlCommand(customerInsertstring, connection);
 
@@ -143,7 +133,10 @@ namespace AkariBowens_Sheduling_System.DB
             }
         }
 
-        // public static UpdateCustomer(){}
+        public static bool UpdateCustomer(Customer newCust, Address newAddress)
+        {
+            return true;
+        }
 
         public static DataTable GetCustomers()
         {
@@ -151,42 +144,54 @@ namespace AkariBowens_Sheduling_System.DB
             DataTable CustomerListQuery;
 
             DataTable CustomerList = new DataTable();
-
-            string allCustomersQuery = $"SELECT customerId, customerName, address.addressId, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
-
-            MySqlCommand customersQuery = new MySqlCommand(allCustomersQuery, DBConnection.connect);
-            DBConnection.OpenConnection();
             
 
+            //string allCustomersQuery = $"SELECT customerId, customerName, address.addressId, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
+
+            string allCustomersQuery = $"SELECT customerId, customerName, phone, address, address.addressId, postalCode, city, city.cityId, country, country.countryId FROM customer INNER JOIN address ON customer.addressId = address.addressId INNER JOIN city ON address.cityId = city.cityId INNER JOIN country ON city.countryId = country.countryId;";
+            
+            MySqlCommand customersQuery = new MySqlCommand(allCustomersQuery, DBConnection.connect);
+            DBConnection.OpenConnection();
             using (DBConnection.connect)
             {
                 MySqlDataAdapter dataAdapter = new MySqlDataAdapter(allCustomersQuery, DBConnection.connect);
                 CustomerListQuery = new DataTable();
-
                 dataAdapter.Fill(CustomerListQuery);
             }
             CustomerList = CustomerListQuery.Clone();
             var query =
-                from row in CustomerListQuery.AsEnumerable()
-                select new
-                {
-                    CustomerId = row.Field<int>("customerId"),
-                    CustomerName = row.Field<string>("customerName"),
-                    AddressID = row.Field<int>("addressId"),
-
-                    // Not needed 
-                    AddressName = row.Field<string>("address")
-                }; 
+            from row in CustomerListQuery.AsEnumerable()
+            select new
+            {
+                CustomerId = row.Field<int>("customerId"),
+                CustomerName = row.Field<string>("customerName"),
+                Phone = row.Field<string>("phone"),
+                AddressName = row.Field<string>("address"),
+                AddressID = row.Field<int>("addressId"),
+                PostalCode = row.Field<string>("postalCode"),
+                City = row.Field<string>("city"),
+                CityId = row.Field<int>("cityId"),
+                Country = row.Field<string>("country"),
+                CountryId = row.Field<int>("countryId")
+            }; 
 
             foreach (var item in query)
             {
                 Customer newCust = new Customer(item.CustomerId, item.CustomerName, item.AddressID );
+                Address newAddress = new Address(item.AddressID, item.AddressName, item.Phone);
+                newAddress.Phone = item.Phone;
+                newAddress.PostalCode = item.PostalCode;
 
                 Customers.Add(newCust);
+                //Address.Addresses.Add(newAddress);
+                // City.Cities.Add(item.CityId, item.City, item.CountryId);
+                // Country.Countries.Add(item.CountryId, item.Country);
 
-                CustomerList.Rows.Add(item.CustomerId, item.CustomerName, item.AddressID);
+                //AddressList.Rows.Add(item.AddressID, item.AddressName, item.CityId, item.PostalCode, item.Phone);
+
+                CustomerList.Rows.Add(item.CustomerId, item.CustomerName, item.Phone, item.AddressName, item.AddressID, item.PostalCode, item.City, item.CityId, item.Country, item.CountryId);
             }
-
+            
             return CustomerList;
         }
 

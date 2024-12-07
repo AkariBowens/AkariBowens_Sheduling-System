@@ -31,7 +31,6 @@ namespace AkariBowens_Sheduling_System.DB
         private static FileStream fileWriter;
         private static FileStream fileReader;
 
-
         // ----- Methods ----- //
 
         // Logs every time a new user is logged in - called in constructor - static?

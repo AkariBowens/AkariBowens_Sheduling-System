@@ -150,6 +150,12 @@
     <Compile Include="UpdateAppointmentForm.Designer.cs">
       <DependentUpon>UpdateAppointmentForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UpdateCustomerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateCustomerForm.Designer.cs">
+      <DependentUpon>UpdateCustomerForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AddAppointmentForm.resx">
       <DependentUpon>AddAppointmentForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -179,6 +185,9 @@
     </Compile>
     <EmbeddedResource Include="UpdateAppointmentForm.resx">
       <DependentUpon>UpdateAppointmentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdateCustomerForm.resx">
+      <DependentUpon>UpdateCustomerForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

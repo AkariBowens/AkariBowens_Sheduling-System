@@ -26,8 +26,6 @@ namespace AkariBowens_Sheduling_System
         private string AddCustomerPhone;
 
 
-        public bool isNewCustomer = true;
-        //private string ExceptionMessage;
         private bool ValidTextBoxes()
         {
             return (!string.IsNullOrWhiteSpace(name_textBox.Text) && !string.IsNullOrWhiteSpace(phone_textBox.Text) && !string.IsNullOrWhiteSpace(address_textBox.Text));
@@ -149,20 +147,6 @@ namespace AkariBowens_Sheduling_System
 
         private void AddCustomer_Load(object sender, EventArgs e)
         {
-            
-            //if (isNewCustomer == false)
-            //{
-            //    //  load with modify/update label and prefilled date from list w/ all customers related to {CurrentUser.UserId}
-
-            //    // -- Changes title -- //
-            //    variable_text_label.Text = "Update";
-
-            //    // -- Prefills textboxes -- //
-            //    name_textBox.Text = Customer.SelectedCustomer.CustomerName;
-            //    address_textBox.Text = Customer.SelectedCustomer.AddressID.ToString();
-            //    phone_textBox.Text = Address.SelectedAddress.Phone;
-            //}
-
             // Changes after input detected in all 3 fields
             save_button.Enabled = false;
         }
@@ -175,20 +159,29 @@ namespace AkariBowens_Sheduling_System
         private void save_button_Click(object sender, EventArgs e)
         {
             Console.WriteLine($"Save button. {AddCustomerName} {AddCustomerPhone} {AddCustomerAddress}");
-            // Change address to addressID
-            // if (Address.Check(AddCustomerAddress)){
-            // AddCustomerAddress = address_textBox.text
-            // no -- 
-            // }
 
-            // Just add an address each time, so 
-            // Address.AddAddress(AddCustomerAddress);
             // Address.GetAddressIDByPhoneAndAddressName(string phone, string addressname);
             // - returns int
             // -- put this^ in customer declaration
+
             // add address, get id 
-            Address NewAddress = new Address(AddCustomerPhone, AddCustomerAddress);
-            Customer NewCustomer = new Customer(-1, AddCustomerName, -1);
+            Address NewAddress = new Address(-1, AddCustomerAddress, AddCustomerPhone);
+            if (!Address.AddAddress(NewAddress))
+            {
+                Console.WriteLine("Adding Adress Failed");
+            }
+
+
+
+            Console.WriteLine($" Address: {NewAddress.AddressName}; Phone: {NewAddress.Phone}; --AddCustomer..174");
+             
+            int addressId = Address.FindAddressId(NewAddress.AddressName, NewAddress.Phone);
+
+            NewAddress.AddressID = addressId;
+            // add AddressID as NewAddress.AddressID
+            Console.WriteLine(addressId + " --Address ID...180");
+            
+            Customer NewCustomer = new Customer(-1, AddCustomerName, addressId);
 
             if (Customer.AddCustomer(NewCustomer, NewAddress))
             {

@@ -1,4 +1,5 @@
-﻿using AkariBowens_Sheduling_System.DB;
+﻿using AkariBowens_Sheduling_System.Classes;
+using AkariBowens_Sheduling_System.DB;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -66,7 +67,21 @@ namespace AkariBowens_Sheduling_System
 
         private void button2_Click(object sender, EventArgs e)
         {
+            if(CustomerDGV.CurrentRow == null || !CustomerDGV.CurrentRow.Selected)
+            {
+                Customer.SelectedCustomer = new Customer((int)CustomerDGV.CurrentRow.Cells["customerId"].Value, CustomerDGV.CurrentRow.Cells["customerName"].Value.ToString(), (int)CustomerDGV.CurrentRow.Cells["appointmentId"].Value);
 
+                Address.SelectedAddress = new Address((int)CustomerDGV.CurrentRow.Cells["addressId"].Value, CustomerDGV.CurrentRow.Cells["address"].Value.ToString(), CustomerDGV.CurrentRow.Cells["phone"].Value.ToString());
+                // Copy AddCustomerForm, update with update labels
+                //Address.SelectedAddress = new Address();
+                UpdateCustomerForm updateCustomer = new UpdateCustomerForm();
+                updateCustomer.Show();
+            } else
+            {
+                MessageBox.Show("Please select a customer to update!");
+            }
+
+            
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -93,7 +108,12 @@ namespace AkariBowens_Sheduling_System
             CustomerDGV.AllowUserToAddRows = false;
 
             // Change after I fix address
-            CustomerDGV.Columns["address"].Visible = false;
+            // Hide customerId, addressId, cityId, countryId
+            CustomerDGV.Columns["customerId"].Visible = false;
+            CustomerDGV.Columns["addressId"].Visible = false;
+            CustomerDGV.Columns["cityId"].Visible = false;
+            CustomerDGV.Columns["countryId"].Visible = false;
+
 
             // ----- Appointment DGV ----- //
             AppointmentDGV.DataSource = Appointment.GetAppointments();
