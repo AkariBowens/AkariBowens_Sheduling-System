@@ -97,6 +97,7 @@
             this.address_textBox.Name = "address_textBox";
             this.address_textBox.Size = new System.Drawing.Size(186, 20);
             this.address_textBox.TabIndex = 12;
+            this.address_textBox.TextChanged += new System.EventHandler(this.address_textBox_TextChanged);
             // 
             // variable_text_label
             // 

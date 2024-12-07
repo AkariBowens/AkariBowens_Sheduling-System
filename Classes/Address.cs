@@ -72,7 +72,63 @@ namespace AkariBowens_Sheduling_System.Classes
             return true;
         }
         public static string FindAddress(int addrID) { return ""; }
-        
+
+        public static bool UpdateAddress(Address address)
+        {
+            try 
+            {
+                Console.WriteLine($"UpdateAddress: Phone-{address.Phone}; ID:{address.AddressID}");
+
+                //Address AddressToUpdate = address;
+
+                string phoneString = $"phone = '{address.Phone}'";
+                string addressString = $"address = '{address.AddressName}'";
+
+                string fullString = string.Empty;
+
+                if (address.Phone != SelectedAddress.Phone)
+                {
+
+                    fullString = phoneString;
+
+                }
+
+                if (address.AddressName != SelectedAddress.AddressName)
+                {
+                    if (fullString == string.Empty)
+                    {
+                        fullString = addressString;
+                    }
+                    else if(fullString != string.Empty)
+                    {
+                        fullString = fullString + $", {addressString}";
+                    }
+                }
+
+                Console.WriteLine($"FullString: {fullString}");
+
+                string updateString
+                    = $" UPDATE address SET {fullString} WHERE addressId = {address.AddressID};";
+
+                Console.WriteLine($"UpdateString: {updateString}");
+
+                DBConnection.OpenConnection();
+                MySqlCommand mySqlCommand = new MySqlCommand(updateString, DBConnection.connect);
+
+                if (mySqlCommand.ExecuteNonQuery() == 0)
+                {
+                    throw new Exception("Update address failed.");
+                }
+
+                return true;
+            }
+            catch (Exception exc) 
+            { 
+                Console.WriteLine(exc.Message.ToString());
+                return false;
+            }
+
+        }
         //Delete
         public static int FindAddressId(string addrName, string phone)
         {
@@ -121,7 +177,7 @@ namespace AkariBowens_Sheduling_System.Classes
             CityId = 1;
 
             //PostalCode = postalCode;
-            PostalCode = GlobalPostalCode++.ToString();
+            PostalCode = Convert.ToString(GlobalPostalCode++);
             Phone = phone;
 
             // ----- //

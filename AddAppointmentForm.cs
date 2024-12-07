@@ -95,6 +95,9 @@ namespace AkariBowens_Sheduling_System
         private void cancel_button_Click(object sender, EventArgs e)
         {
             Customer.SelectedCustomer = null;
+            Appointment.SelectedAppointment = null;
+            CurrentUserViewForm currentUserViewForm = new CurrentUserViewForm();
+            currentUserViewForm.Show();
             Close();
         }
 
@@ -221,6 +224,8 @@ namespace AkariBowens_Sheduling_System
                     //Customer.SelectedCustomer = null;
                     //Appointment.SelectedAppointment = null;
                     Console.WriteLine("Save successful");
+                    CurrentUserViewForm currentUserViewForm = new CurrentUserViewForm();
+                    currentUserViewForm.Show();
                     Close();
                 }
                 else

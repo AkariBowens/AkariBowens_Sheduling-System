@@ -73,7 +73,6 @@ namespace AkariBowens_Sheduling_System.DB
                 
                 MySqlCommand insertCustomer = new MySqlCommand(customerInsertstring, connection);
 
-                // if this returns -1... run error
                 if (insertCustomer.ExecuteNonQuery() == 0)
                 {
                     Console.WriteLine($"Adding customer failed!");
@@ -133,9 +132,44 @@ namespace AkariBowens_Sheduling_System.DB
             }
         }
 
-        public static bool UpdateCustomer(Customer newCust, Address newAddress)
+        public static bool UpdateCustomer(Customer newCust)
         {
-            return true;
+
+            try
+            {
+
+                string name = $"customerName = '{newCust.CustomerName}'";
+
+
+                string fullCustomerString = string.Empty;
+
+                if (newCust.CustomerName != SelectedCustomer.CustomerName)
+                {
+                    fullCustomerString = name;
+                }
+
+                string customerUpdateString
+                    = $"UPDATE customer " +
+                    $"SET {fullCustomerString} " +
+                    $"WHERE customerId = {newCust.CustomerID};";
+
+                DBConnection.OpenConnection();
+                MySqlCommand mySqlCommand = new MySqlCommand(customerUpdateString, DBConnection.connect);
+
+                if (mySqlCommand.ExecuteNonQuery() == 0)
+                {
+                    throw new Exception("Update customer failed.");
+                }
+
+                Console.WriteLine($"Updated customer with ID: {newCust.CustomerID}.");
+
+                return true;
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.Message.ToString());
+                return false;
+            }
         }
 
         public static DataTable GetCustomers()

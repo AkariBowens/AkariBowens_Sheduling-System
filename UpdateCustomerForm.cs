@@ -23,9 +23,32 @@ namespace AkariBowens_Sheduling_System
         private string UpdateCustomerPhone;
         private string UpdateCustomerAddress;
 
+        
+
+        private void cancel_button_Click(object sender, EventArgs e)
+        {
+            Customer.SelectedCustomer = null;
+            Address.SelectedAddress = null;
+            CurrentUserViewForm currentUserViewForm = new CurrentUserViewForm();
+            currentUserViewForm.Show();
+            Close();
+        }
+
+        
+
+        private void UpdateCustomerForm_Load(object sender, EventArgs e)
+        {
+            save_button.Enabled = false;
+
+            name_textBox.Text = Customer.SelectedCustomer.CustomerName;
+            phone_textBox.Text = Address.SelectedAddress.Phone;
+            address_textBox.Text = Address.SelectedAddress.AddressName;
+        }
+
+
         private bool ValidTextBoxes()
         {
-            return ((!string.IsNullOrWhiteSpace(name_textBox.Text) && name_textBox.Text != Customer.SelectedCustomer.CustomerName) && (!string.IsNullOrWhiteSpace(phone_textBox.Text) && phone_textBox.Text != Address.SelectedAddress.Phone) && (!string.IsNullOrWhiteSpace(address_textBox.Text) && name_textBox.Text != Address.SelectedAddress.AddressName));
+            return ( !string.IsNullOrWhiteSpace(name_textBox.Text) && !string.IsNullOrWhiteSpace( phone_textBox.Text) && !string.IsNullOrWhiteSpace(name_textBox.Text));
         }
 
         private void ToggleSave()
@@ -36,32 +59,57 @@ namespace AkariBowens_Sheduling_System
             }
         }
 
-        private void cancel_button_Click(object sender, EventArgs e)
-        {
-            Customer.SelectedCustomer = null;
-            Close();
-        }
-
         private void save_button_Click(object sender, EventArgs e)
         {
-            Console.WriteLine($"Save button. {UpdateCustomerName} {UpdateCustomerPhone} {UpdateCustomerAddress}");
+            try
+            {
 
-            //Address
-            //Address.AddAddress();
+                //Address
+                //Address.AddAddress();
 
-            //Customer newCust = new Customer(-1, UpdateCustomerName);
-            //if (Customer.UpdateCustomer()
-            //{
+                Customer newCust = new Customer(Customer.SelectedCustomer.CustomerID, UpdateCustomerName, Customer.SelectedCustomer.AddressID);
+                Address newAddr = new Address(Address.SelectedAddress.AddressID, UpdateCustomerAddress, UpdateCustomerPhone);
+                // only run updates based-on changed boxes
 
-            //}
-            Customer.SelectedCustomer = null;
+                if (UpdateCustomerAddress != Address.SelectedAddress.AddressName || UpdateCustomerPhone != Address.SelectedAddress.Phone)
+                {
+                    if (newAddr != null && Address.SelectedAddress != null)
+                    {
+                        if (!Address.UpdateAddress(newAddr))
+                        {
+                            throw new Exception("Error in address");
+                        }
+                    }
+                }
+
+                if (UpdateCustomerName != Customer.SelectedCustomer.CustomerName )
+                {
+                    if (newCust != null && Customer.SelectedCustomer != null) 
+                    {
+                        if (!Customer.UpdateCustomer(newCust))
+                        {
+                            Console.WriteLine("Update failed");
+                            throw new Exception("Could not update Customer!");
+                        }
+                    }
+
+                }
+
+                Console.WriteLine("Update customer successful.");
+
+                Customer.SelectedCustomer = null;
+                Address.SelectedAddress = null;
+                CurrentUserViewForm currentUserViewForm = new CurrentUserViewForm();
+                currentUserViewForm.Show();
+                Close();
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.Message.ToString());
+                MessageBox.Show("Could not update customer!");
+
+            }
         }
-
-        private void UpdateCustomerForm_Load(object sender, EventArgs e)
-        {
-            save_button.Enabled = false;
-        }
-
         private void name_textBox_TextChanged(object sender, EventArgs e)
         {
             if (name_textBox.Text != Customer.SelectedCustomer.CustomerName)
@@ -95,26 +143,29 @@ namespace AkariBowens_Sheduling_System
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(phone_textBox.Text))
+                if (phone_textBox.Text != Address.SelectedAddress.Phone)
                 {
-                    throw new ArgumentException("Phone number cannot be empty!");
-                }
-
-                // test if it only contains dashes or dashes
-                foreach (char item in phone_textBox.Text)
-                {
-                    if ((item >= '0' && item <= '9') || item == (char)45)
+                    if (string.IsNullOrWhiteSpace(phone_textBox.Text))
                     {
-                        continue;
+                        throw new ArgumentException("Phone number cannot be empty!");
                     }
-                    else
-                    {
-                        throw new ArgumentException("Phone can only contain numbers or hypens!");
-                    }
-                }
-                UpdateCustomerPhone = phone_textBox.Text.Trim();
-                ToggleSave();
 
+                    // test if it only contains dashes or dashes
+                    foreach (char item in phone_textBox.Text)
+                    {
+                        if ((item >= '0' && item <= '9') || item == (char)45)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Phone can only contain numbers or hypens!");
+                        }
+                    }
+                    UpdateCustomerPhone = phone_textBox.Text.Trim();
+                    ToggleSave();
+
+                }
             }
             catch (Exception ArgumentException)
             {
@@ -125,6 +176,36 @@ namespace AkariBowens_Sheduling_System
 
                 phone_textBox.BackColor = Color.Tomato;
                 phone_textBox.Clear();
+            }
+            
+        }
+
+        private void address_textBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (address_textBox.Text != Address.SelectedAddress.AddressName)
+                {
+                    if (string.IsNullOrWhiteSpace(address_textBox.Text))
+                    {
+                        throw new ArgumentException("Address cannot be empty!");
+                    }
+                    //Runs only after formatting
+                    UpdateCustomerAddress = address_textBox.Text.Trim();
+                    ToggleSave();
+
+                }
+            }
+
+            catch (Exception ArgumentException)
+            {
+                if (address_textBox.Text != "")
+                {
+                    MessageBox.Show(ArgumentException.Message.ToString());
+                }
+
+                address_textBox.BackColor = Color.Tomato;
+                address_textBox.Clear();
             }
         }
     }

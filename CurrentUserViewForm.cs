@@ -52,7 +52,7 @@ namespace AkariBowens_Sheduling_System
                     }  
                         
                     CustomerDGV.ResetBindings();
-                    CustomerDGV.DataSource = Customer.GetCustomers();
+                    
 
                 }
                
@@ -62,25 +62,30 @@ namespace AkariBowens_Sheduling_System
                 Console.WriteLine(ArgumentNullException.Message.ToString());
                 MessageBox.Show("Select a customer.", "Delete customer.");
             }
+            finally
+            {
+                CustomerDGV.DataSource = Customer.GetCustomers();
+            }
             
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             if(CustomerDGV.CurrentRow == null || !CustomerDGV.CurrentRow.Selected)
-            {
-                Customer.SelectedCustomer = new Customer((int)CustomerDGV.CurrentRow.Cells["customerId"].Value, CustomerDGV.CurrentRow.Cells["customerName"].Value.ToString(), (int)CustomerDGV.CurrentRow.Cells["appointmentId"].Value);
-
-                Address.SelectedAddress = new Address((int)CustomerDGV.CurrentRow.Cells["addressId"].Value, CustomerDGV.CurrentRow.Cells["address"].Value.ToString(), CustomerDGV.CurrentRow.Cells["phone"].Value.ToString());
-                // Copy AddCustomerForm, update with update labels
-                //Address.SelectedAddress = new Address();
-                UpdateCustomerForm updateCustomer = new UpdateCustomerForm();
-                updateCustomer.Show();
-            } else
-            {
+            { 
                 MessageBox.Show("Please select a customer to update!");
             }
 
+            Customer.SelectedCustomer = new Customer((int)CustomerDGV.CurrentRow.Cells["customerId"].Value, CustomerDGV.CurrentRow.Cells["customerName"].Value.ToString(), (int)CustomerDGV.CurrentRow.Cells["addressId"].Value);
+
+            Address.SelectedAddress = new Address((int)CustomerDGV.CurrentRow.Cells["addressId"].Value, CustomerDGV.CurrentRow.Cells["address"].Value.ToString(), CustomerDGV.CurrentRow.Cells["phone"].Value.ToString());
+            // Copy AddCustomerForm, update with update labels
+            //Address.SelectedAddress = new Address();
+            UpdateCustomerForm updateCustomer = new UpdateCustomerForm();
+            updateCustomer.Show();
+            Close();
+
+            CustomerDGV.DataSource = Customer.GetCustomers();
             
         }
 
@@ -89,7 +94,11 @@ namespace AkariBowens_Sheduling_System
             // Opens a new add customer form 
             AddCustomer addCustomer = new AddCustomer();
             addCustomer.Show();
+            Close();
             CustomerDGV.ResetBindings();
+
+            CustomerDGV.DataSource = Customer.GetCustomers();
+            
         }
 
         private void CustomerDGV_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -143,23 +152,30 @@ namespace AkariBowens_Sheduling_System
 
         private void appts_add_button_Click(object sender, EventArgs e)
         {
-            // Opens new Add Appointment Form
-            if (CustomerDGV.CurrentRow.Selected) {
+            
+            
+            try
+            {
+                // Opens new Add Appointment Form
+                if (!CustomerDGV.CurrentRow.Selected)
+                {
+                    throw new Exception("No customer selected!");
+                }
+
                 AddAppointmentForm addAppointment = new AddAppointmentForm();
 
                 // Customer constructor
                 Customer.SelectedCustomer = new Customer((int)CustomerDGV.CurrentRow.Cells["customerId"].Value, CustomerDGV.CurrentRow.Cells["customerName"].Value.ToString(), (int)CustomerDGV.CurrentRow.Cells["addressId"].Value);
-                
-                //addAppointment.isNewAppt = true;
+
+
                 addAppointment.Show();
-
+                Close();
                 //Customer.SelectedCustomer = null;
-
-               
-                // I just need to update the DGV
             }
-            else {
+            catch (Exception exc)
+            {
                 MessageBox.Show("Select or add a new customer!");
+                Console.WriteLine(exc.Message.ToString());
             }
         }
 
@@ -212,7 +228,7 @@ namespace AkariBowens_Sheduling_System
                 }
 
                 updateAppointmentForm.Show();
-
+                Close();
             }
             else
             {
