@@ -37,9 +37,6 @@ namespace AkariBowens_Sheduling_System.Classes
         // Hard-code this
         public string LastUpdatedBy { get; set; }
 
-        
-        // public static List<Address> Addresses { get; set; } = new List<Address>();
-
         public static Address SelectedAddress { get; set; }
 
         // ----- Methods ----- //

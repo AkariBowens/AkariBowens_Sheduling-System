@@ -147,7 +147,7 @@ namespace AkariBowens_Sheduling_System
 
         private void AddCustomer_Load(object sender, EventArgs e)
         {
-            // Changes after input detected in all 3 fields
+            
             save_button.Enabled = false;
         }
 
@@ -163,25 +163,18 @@ namespace AkariBowens_Sheduling_System
         {
             Console.WriteLine($"Save button. {AddCustomerName} {AddCustomerPhone} {AddCustomerAddress}");
 
-            // Address.GetAddressIDByPhoneAndAddressName(string phone, string addressname);
-            // - returns int
-            // -- put this^ in customer declaration
-
-            // add address, get id 
             Address NewAddress = new Address(-1, AddCustomerAddress, AddCustomerPhone);
             if (!Address.AddAddress(NewAddress))
             {
                 Console.WriteLine("Adding Adress Failed");
             }
 
-
-
             Console.WriteLine($" Address: {NewAddress.AddressName}; Phone: {NewAddress.Phone}; --AddCustomer..174");
              
             int addressId = Address.FindAddressId(NewAddress.AddressName, NewAddress.Phone);
 
             NewAddress.AddressID = addressId;
-            // add AddressID as NewAddress.AddressID
+
             Console.WriteLine(addressId + " --Address ID...180");
             
             Customer NewCustomer = new Customer(-1, AddCustomerName, addressId);
@@ -193,19 +186,7 @@ namespace AkariBowens_Sheduling_System
                 currentUserViewForm.Show();
                 Close();
             }
-
-            //if (Customer.AddCustomer(new Customer(AddCustomerName, AddCustomerAddress), new Address(AddCustomerAddress
-            //    , AddCustomerPhone)))
-            //{
-            //    Console.WriteLine("Save successful");
-
-            //    Close();
-            //}
-            //else
-            //{
-            //    Console.WriteLine("Save unsuccessful. Try again");
-            //    MessageBox.Show("Save unsuccessful. Try again.");
-            //}
+            
         }
 
         

@@ -117,10 +117,7 @@ namespace AkariBowens_Sheduling_System.DB
         {
             try
             {
-                //Console.WriteLine(Appt.ApptID);
                 Appointment appointment = Appt;
-
-                //Console.WriteLine($"Start time before conversion: {appointment.StartTime}");
 
                 // Converts Appointment start and end times to utc and accounts for DST
                 appointment.StartTime = TimeZoneInfo.ConvertTimeToUtc(appointment.StartTime, TimeZoneInfo.Local);
