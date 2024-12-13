@@ -40,16 +40,18 @@
             this.appts_update_button = new System.Windows.Forms.Button();
             this.appts_delete_button = new System.Windows.Forms.Button();
             this.viewAll_Link = new System.Windows.Forms.LinkLabel();
+            this.reports_button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.AppointmentDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CustomerDGV)).BeginInit();
             this.SuspendLayout();
             // 
             // close_button
             // 
+            this.close_button.Font = new System.Drawing.Font("Gadugi", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.close_button.ForeColor = System.Drawing.Color.Red;
-            this.close_button.Location = new System.Drawing.Point(926, 402);
+            this.close_button.Location = new System.Drawing.Point(905, 366);
             this.close_button.Name = "close_button";
-            this.close_button.Size = new System.Drawing.Size(106, 50);
+            this.close_button.Size = new System.Drawing.Size(91, 46);
             this.close_button.TabIndex = 0;
             this.close_button.Text = "Close";
             this.close_button.UseVisualStyleBackColor = true;
@@ -59,7 +61,7 @@
             // 
             this.appts_label.AutoSize = true;
             this.appts_label.Font = new System.Drawing.Font("Gadugi", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.appts_label.Location = new System.Drawing.Point(564, 64);
+            this.appts_label.Location = new System.Drawing.Point(548, 64);
             this.appts_label.Name = "appts_label";
             this.appts_label.Size = new System.Drawing.Size(153, 25);
             this.appts_label.TabIndex = 1;
@@ -69,7 +71,7 @@
             // 
             this.customers_label.AutoSize = true;
             this.customers_label.Font = new System.Drawing.Font("Gadugi", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.customers_label.Location = new System.Drawing.Point(67, 64);
+            this.customers_label.Location = new System.Drawing.Point(51, 64);
             this.customers_label.Name = "customers_label";
             this.customers_label.Size = new System.Drawing.Size(115, 25);
             this.customers_label.TabIndex = 2;
@@ -78,7 +80,7 @@
             // AppointmentDGV
             // 
             this.AppointmentDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.AppointmentDGV.Location = new System.Drawing.Point(569, 111);
+            this.AppointmentDGV.Location = new System.Drawing.Point(553, 111);
             this.AppointmentDGV.Name = "AppointmentDGV";
             this.AppointmentDGV.Size = new System.Drawing.Size(463, 136);
             this.AppointmentDGV.TabIndex = 3;
@@ -88,7 +90,7 @@
             // CustomerDGV
             // 
             this.CustomerDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.CustomerDGV.Location = new System.Drawing.Point(72, 111);
+            this.CustomerDGV.Location = new System.Drawing.Point(56, 111);
             this.CustomerDGV.Name = "CustomerDGV";
             this.CustomerDGV.Size = new System.Drawing.Size(463, 136);
             this.CustomerDGV.TabIndex = 4;
@@ -98,7 +100,7 @@
             // customers_delete_button
             // 
             this.customers_delete_button.Font = new System.Drawing.Font("Gadugi", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.customers_delete_button.Location = new System.Drawing.Point(462, 275);
+            this.customers_delete_button.Location = new System.Drawing.Point(446, 275);
             this.customers_delete_button.Name = "customers_delete_button";
             this.customers_delete_button.Size = new System.Drawing.Size(73, 38);
             this.customers_delete_button.TabIndex = 5;
@@ -109,7 +111,7 @@
             // customers_update_button
             // 
             this.customers_update_button.Font = new System.Drawing.Font("Gadugi", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.customers_update_button.Location = new System.Drawing.Point(369, 275);
+            this.customers_update_button.Location = new System.Drawing.Point(353, 275);
             this.customers_update_button.Name = "customers_update_button";
             this.customers_update_button.Size = new System.Drawing.Size(73, 38);
             this.customers_update_button.TabIndex = 6;
@@ -120,7 +122,7 @@
             // customers_add_button
             // 
             this.customers_add_button.Font = new System.Drawing.Font("Gadugi", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.customers_add_button.Location = new System.Drawing.Point(276, 275);
+            this.customers_add_button.Location = new System.Drawing.Point(260, 275);
             this.customers_add_button.Name = "customers_add_button";
             this.customers_add_button.Size = new System.Drawing.Size(73, 38);
             this.customers_add_button.TabIndex = 7;
@@ -131,7 +133,7 @@
             // appts_add_button
             // 
             this.appts_add_button.Font = new System.Drawing.Font("Gadugi", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.appts_add_button.Location = new System.Drawing.Point(773, 275);
+            this.appts_add_button.Location = new System.Drawing.Point(757, 275);
             this.appts_add_button.Name = "appts_add_button";
             this.appts_add_button.Size = new System.Drawing.Size(73, 38);
             this.appts_add_button.TabIndex = 10;
@@ -142,7 +144,7 @@
             // appts_update_button
             // 
             this.appts_update_button.Font = new System.Drawing.Font("Gadugi", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.appts_update_button.Location = new System.Drawing.Point(866, 275);
+            this.appts_update_button.Location = new System.Drawing.Point(850, 275);
             this.appts_update_button.Name = "appts_update_button";
             this.appts_update_button.Size = new System.Drawing.Size(73, 38);
             this.appts_update_button.TabIndex = 9;
@@ -153,7 +155,7 @@
             // appts_delete_button
             // 
             this.appts_delete_button.Font = new System.Drawing.Font("Gadugi", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.appts_delete_button.Location = new System.Drawing.Point(959, 275);
+            this.appts_delete_button.Location = new System.Drawing.Point(943, 275);
             this.appts_delete_button.Name = "appts_delete_button";
             this.appts_delete_button.Size = new System.Drawing.Size(73, 38);
             this.appts_delete_button.TabIndex = 8;
@@ -165,7 +167,7 @@
             // 
             this.viewAll_Link.AutoSize = true;
             this.viewAll_Link.Font = new System.Drawing.Font("Gadugi", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.viewAll_Link.Location = new System.Drawing.Point(863, 83);
+            this.viewAll_Link.Location = new System.Drawing.Point(847, 83);
             this.viewAll_Link.Name = "viewAll_Link";
             this.viewAll_Link.Size = new System.Drawing.Size(163, 16);
             this.viewAll_Link.TabIndex = 11;
@@ -173,11 +175,23 @@
             this.viewAll_Link.Text = "View Appointments by Day";
             this.viewAll_Link.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
+            // reports_button
+            // 
+            this.reports_button.Font = new System.Drawing.Font("Gadugi", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.reports_button.Location = new System.Drawing.Point(109, 366);
+            this.reports_button.Name = "reports_button";
+            this.reports_button.Size = new System.Drawing.Size(79, 46);
+            this.reports_button.TabIndex = 12;
+            this.reports_button.Text = "Reports";
+            this.reports_button.UseVisualStyleBackColor = true;
+            this.reports_button.Click += new System.EventHandler(this.reports_button_Click);
+            // 
             // CurrentUserViewForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1101, 497);
+            this.ClientSize = new System.Drawing.Size(1078, 463);
+            this.Controls.Add(this.reports_button);
             this.Controls.Add(this.viewAll_Link);
             this.Controls.Add(this.appts_add_button);
             this.Controls.Add(this.appts_update_button);
@@ -214,5 +228,6 @@
         private System.Windows.Forms.Button appts_update_button;
         private System.Windows.Forms.Button appts_delete_button;
         private System.Windows.Forms.LinkLabel viewAll_Link;
+        private System.Windows.Forms.Button reports_button;
     }
 }

@@ -178,7 +178,6 @@ namespace AkariBowens_Sheduling_System.DB
             DataTable CustomerListQuery;
 
             DataTable CustomerList = new DataTable();
-            
 
             //string allCustomersQuery = $"SELECT customerId, customerName, address.addressId, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
 

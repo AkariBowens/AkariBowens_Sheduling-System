@@ -211,7 +211,11 @@ namespace AkariBowens_Sheduling_System.DB
 
                             // Change custID to customerName
                             // Fix minutes to single digit, rounded down
-                            MessageBox.Show($"You have an appointment with {NextAppointment.CustID} in {TimeToNextAppointment.TotalMinutes} @{Appt.StartTime.TimeOfDay}!");
+                            // this isn't it
+                            var wholeNumberTimeLeft = Customer.GetCustomers().AsEnumerable().Where(cust => (int)cust[columnName: "customerId"] == Appt.CustID);
+
+                            
+                            MessageBox.Show($"You have an appointment with {wholeNumberTimeLeft} in {((int)TimeToNextAppointment.TotalMinutes)} @{Appt.StartTime.TimeOfDay}!");
                             return;
                         }
                     }

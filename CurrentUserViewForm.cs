@@ -133,6 +133,8 @@ namespace AkariBowens_Sheduling_System
 
             AppointmentDGV.Columns["userId"].Visible = false;
 
+
+            //Console.WriteLine(Customer.GetCustomers().AsEnumerable().Where(cust => (int)cust[columnName: "customerId"] == 1);
         }
 
         private void AppointmentDGV_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -242,6 +244,14 @@ namespace AkariBowens_Sheduling_System
             // Opens a new AppointmentsCalendar form
             AllAppointmentsCalendar allAppointmentsCalendar = new AllAppointmentsCalendar();
             allAppointmentsCalendar.Show();
+        }
+
+        private void reports_button_Click(object sender, EventArgs e)
+        {
+            ReportsForm reports = new ReportsForm();
+            reports.Show();
+
+            Close();
         }
     }
 }

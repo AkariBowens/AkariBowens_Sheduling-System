@@ -72,6 +72,7 @@
             this.UserSchedule_Button.TabIndex = 3;
             this.UserSchedule_Button.Text = "View";
             this.UserSchedule_Button.UseVisualStyleBackColor = true;
+            this.UserSchedule_Button.Click += new System.EventHandler(this.UserSchedule_Button_Click);
             // 
             // CustomersPerCountry_Button
             // 
@@ -82,6 +83,7 @@
             this.CustomersPerCountry_Button.TabIndex = 4;
             this.CustomersPerCountry_Button.Text = "View";
             this.CustomersPerCountry_Button.UseVisualStyleBackColor = true;
+            this.CustomersPerCountry_Button.Click += new System.EventHandler(this.CustomersPerCountry_Button_Click);
             // 
             // Reports_Label
             // 
@@ -159,6 +161,7 @@
             this.Controls.Add(this.ReportsFormClose_button);
             this.Name = "ReportsForm";
             this.Text = "ReportsForm";
+            this.Load += new System.EventHandler(this.ReportsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ReportsDGV)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
