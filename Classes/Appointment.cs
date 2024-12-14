@@ -48,7 +48,7 @@ namespace AkariBowens_Sheduling_System.DB
             {
 
                 Appointment newAppointment = appt;
-                Console.WriteLine($"In AddAppointment(): {appt.EndTime.Date}");
+                Console.WriteLine($"In AddAppointment(): {newAppointment.EndTime.Date}");
                 Customer customerForAppt = customer;
 
                 // Converts Appointment start and end times to local and accounts for DST
@@ -80,7 +80,7 @@ namespace AkariBowens_Sheduling_System.DB
                         Console.WriteLine($"Adding appointment failed!");
                         throw new Exception("Adding appointment failed!");
                     }
-                    Console.WriteLine($"Added new appointment with {customerForAppt.CustomerName} on {appt.StartTime.Date.ToString("MM-dd-yyyy")} @{appt.StartTime.TimeOfDay}");
+                    Console.WriteLine($"Added new appointment with {customerForAppt.CustomerName} on {appt.StartTime.Date.ToString("MM-dd-yyyy")} @{newAppointment.StartTime.TimeOfDay}");
                 }
 
                 Customer.SelectedCustomer = null;

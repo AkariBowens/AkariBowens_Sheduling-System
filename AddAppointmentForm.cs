@@ -58,7 +58,9 @@ namespace AkariBowens_Sheduling_System
 
         private void ToggleSave()
         {
-            if(AddApptStart != null || AddApptEnd != null)
+            //AddApptEnd = new DateTime(AddApptStart.Year, AddApptStart.Month, AddApptStart.Day);
+            Console.WriteLine($"{AddApptEnd} --ToggleSave()..62");
+            if(AddApptStart != null && AddApptEnd != null && AddApptEnd > AddApptStart && !string.IsNullOrWhiteSpace(ApptType_textBox.Text))
             {
                 save_button.Enabled = true;
             }
@@ -83,7 +85,7 @@ namespace AkariBowens_Sheduling_System
                 }
 
                 AddApptType = ApptType_textBox.Text;
-
+                ToggleSave();
             }
             catch (Exception exc)
             {
@@ -217,20 +219,30 @@ namespace AkariBowens_Sheduling_System
                 Console.WriteLine(Customer.SelectedCustomer.CustomerID + " -- Customer Id");
                 // Instantiates new Appointment to be added
                 Appointment SavedAppt = new Appointment(-1, Customer.SelectedCustomer.CustomerID, AddApptStart, AddApptEnd, AddApptType);
+                Console.WriteLine($"{AddApptStart},  {AddApptEnd}  -- AddApptForm.. 220");
                 Customer savedCustomer = Customer.SelectedCustomer;
                 Console.WriteLine("Save button..");
-                if (Appointment.AddAppointment(SavedAppt, savedCustomer))
+                if (SavedAppt.StartTime >= DateTime.Now && SavedAppt.EndTime >= DateTime.Now) 
                 {
-                    //Customer.SelectedCustomer = null;
-                    //Appointment.SelectedAppointment = null;
-                    Console.WriteLine("Save successful");
-                    CurrentUserViewForm currentUserViewForm = new CurrentUserViewForm();
-                    currentUserViewForm.Show();
-                    Close();
+                    
+                    if (Appointment.AddAppointment(SavedAppt, savedCustomer))
+                    {
+                        //Customer.SelectedCustomer = null;
+                        //Appointment.SelectedAppointment = null;
+                        Console.WriteLine("Save successful");
+                        CurrentUserViewForm currentUserViewForm = new CurrentUserViewForm();
+                        currentUserViewForm.Show();
+
+                        Close();
+                    }
+                    else
+                    {
+                        throw new Exception("Something went wrong during Add operation.");
+                    }
                 }
                 else
                 {
-                    throw new Exception("Something went wrong during Add operation.");
+                    throw new ArgumentException("Something went wrong. Try again!");
                 }
             }
             catch (Exception exc)
@@ -302,65 +314,87 @@ namespace AkariBowens_Sheduling_System
             {
                 Console.WriteLine(exc.Message.ToString());
                 MessageBox.Show(exc.Message.ToString());
-                //start_textBox.BackColor = Color.Tomato;
-                //start_textBox.Clear();
+      
 
             }
         }
 
         private void End_DateTimePicker_ValueChanged(object sender, EventArgs e)
         {
-            Console.WriteLine(End_DateTimePicker.Value.ToString("yyyy-mm-dd hh:mm:ss"));
+            Console.WriteLine($"{End_DateTimePicker.Value.ToString("yyyy-mm-dd hh:mm:ss")} --end"); 
 
             try
             {
 
-                DateTime tempEndTime = new DateTime(AddApptStart.Year, AddApptStart.Month,  AddApptStart.Day, End_DateTimePicker.Value.Hour, End_DateTimePicker.Value.Minute, End_DateTimePicker.Value.Second);
-                Console.WriteLine($"Chosen: {Start_DateTimePicker.Value}, Now: {DateTime.Now}");
-                if (tempEndTime >= AddApptStart)
+                // DateTime tempEndTime = new DateTime(Start_DateTimePicker.Value.Year, Start_DateTimePicker.Value.Month, Start_DateTimePicker.Value.Day, End_DateTimePicker.Value.Hour, End_DateTimePicker.Value.Minute, End_DateTimePicker.Value.Second);
+
+                DateTime endTimePicker = End_DateTimePicker.Value;
+                
+                Console.WriteLine($"Chosen: {End_DateTimePicker.Value}, Now: {DateTime.Now} -- End..331");
+                if (End_DateTimePicker.Value >= DateTime.Now)
                 {
                     // Checks if chosen time is within business hours
-                     if (tempEndTime.Hour >= OpenTime.Hour && tempEndTime.Hour <= CloseTime.Hour)
+                     if (End_DateTimePicker.Value.Hour >= OpenTime.Hour && End_DateTimePicker.Value.Hour <= CloseTime.Hour)
                         {
+                            Console.WriteLine("Within business hours.");
                             // Checks if end time over laps with any appointments
                             DataTable Appointments = Appointment.GetAppointments();
                             foreach (DataRow row in Appointments.Rows)
                             {
                                 // Checks for appointments on the same day
-                                if (tempEndTime.Date == (DateTime)row["start"])
+                                DateTime appointmentDateStart = (DateTime)row["start"];
+                                DateTime appointmentDateEnd = (DateTime)row["end"];
+
+                                Console.WriteLine($"{appointmentDateStart} -- AddApptForm..342");
+                                if (endTimePicker.Date == appointmentDateStart.Date)
                                 {
-                                // same hour, but before
-                                    if (tempEndTime >= (DateTime)row["start"] && tempEndTime <= (DateTime)row["end"])
-                                    //DateTime.Compare(tempStartTime, (DateTime)row["start"]);
+                                    // same hour, but before
+                                    
+                                    //rewrite this
+                                    if (endTimePicker.Date >= appointmentDateStart.Date && endTimePicker.Date <= appointmentDateEnd.Date)
+                                    // DateTime.Compare(tempStartTime, (DateTime)row["start"]);
                                     {
-                                        // Edit wording later
-                                        throw new ArgumentException("Ending overlaps with another appointment!");
+                                    // Edit wording later
+
+                                        AddApptEnd = endTimePicker;
+                                        Console.WriteLine($"It works! {AddApptEnd} -- ApptEnd");
+                                        ToggleSave();
+                                    }
+                                    else
+                                    {
+                                        throw new ArgumentException("Appointment end overlaps with another appointment!");
                                     }
                                 }
+                                else
+                                {
+                                    AddApptEnd = endTimePicker;
+                                    Console.WriteLine($"It works! {AddApptEnd} -- ApptEnd");
+                                    ToggleSave();
+                            }
 
                             }
-                            AddApptEnd = tempEndTime;
-                            Console.WriteLine($"It works! {AddApptEnd} -- ApptEnd");
-                            ToggleSave();
+                            
                      }
                      else
                      {
-                            Console.WriteLine("Appointment's end was picked earlier than its start.");
-                            throw new Exception("Pick a time after the appointed end.");
+                            Console.WriteLine("Appointment was not within business hours.");
+                            throw new Exception("Appointment end must be within business hours.");
                      }
                 }
                 else
                 {
-                    Console.WriteLine("Chose a time and/or date in the past.");
-                    throw new Exception("Cannot add an appointment in the past.");
+                    if (endTimePicker.Date != AddApptStart.Date)
+                    {
+                        Console.WriteLine("Picked an end time earlier than the start time.");
+                        throw new Exception("Cannot end an appointment before it starts.");
+                    }
                 }
             }
             catch (Exception exc)
             {
                 Console.WriteLine(exc.Message.ToString());
                 MessageBox.Show(exc.Message.ToString());
-                //start_textBox.BackColor = Color.Tomato;
-                //start_textBox.Clear();
+               
             }
         }
     }

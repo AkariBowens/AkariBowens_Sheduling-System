@@ -86,56 +86,60 @@ namespace AkariBowens_Sheduling_System
                 DateTime tempStartTime = Start_DateTimePicker.Value;
                 Console.WriteLine($"Chosen: {Start_DateTimePicker.Value}, Now: {DateTime.Now}");
                 // if the values of selected and new are different - then.. allowSave();
-                if (tempStartTime >= DateTime.Now)
+                if (Appointment.SelectedAppointment.StartTime != Start_DateTimePicker.Value)
                 {
-                    if (tempStartTime.DayOfWeek != DayOfWeek.Saturday && tempStartTime.DayOfWeek != DayOfWeek.Sunday)
+                    if (tempStartTime >= DateTime.Now)
                     {
-                        if (tempStartTime.Hour >= OpenTime.Hour && tempStartTime.Hour <= CloseTime.Hour)
+                        if (tempStartTime.DayOfWeek != DayOfWeek.Saturday && tempStartTime.DayOfWeek != DayOfWeek.Sunday)
                         {
-                            // Checks if selected times overlap
-                            DataTable Appointments = Appointment.GetAppointments();
-                            foreach (DataRow row in Appointments.Rows)
+                            if (tempStartTime.Hour >= OpenTime.Hour && tempStartTime.Hour <= CloseTime.Hour)
                             {
-                                // Only check appointments with a different ID from current Appointment
-                                if ((int)row["appointmentId"] != Appointment.SelectedAppointment.ApptID)
+                                // Checks if selected times overlap
+                                DataTable Appointments = Appointment.GetAppointments();
+                                foreach (DataRow row in Appointments.Rows)
                                 {
-                                    if (tempStartTime.Date == (DateTime)row["start"])
+                                    // Only check appointments with a different ID from current Appointment
+                                    if ((int)row["appointmentId"] != Appointment.SelectedAppointment.ApptID)
                                     {
-                                        if (tempStartTime >= (DateTime)row["start"] && tempStartTime <= (DateTime)row["end"])
+                                        if (tempStartTime.Date == (DateTime)row["start"])
                                         {
-                                            // Edit wording later
-                                            throw new ArgumentException("Times cannot over lap!");
-                                        } 
-                                        //else
-                                        //{
-                                        //    AddApptStart = tempStartTime;
-                                        //    Console.WriteLine($"It works! {AddApptStart}");
-                                        //    ToggleSave();
-                                        //}
+                                            if (tempStartTime >= (DateTime)row["start"] && tempStartTime <= (DateTime)row["end"])
+                                            {
+                                                // Edit wording later
+                                                throw new ArgumentException("Times cannot over lap!");
+                                            }
+                                            //else
+                                            //{
+                                            //    AddApptStart = tempStartTime;
+                                            //    Console.WriteLine($"It works! {AddApptStart}");
+                                            //    ToggleSave();
+                                            //}
+                                        }
                                     }
-                                }
 
+                                }
+                                AddApptStart = tempStartTime;
+                                Console.WriteLine($"It works! {AddApptStart}");
+                                ToggleSave();
                             }
-                            AddApptStart = tempStartTime;
-                            Console.WriteLine($"It works! {AddApptStart}");
-                            ToggleSave();
+                            else
+                            {
+                                Console.WriteLine("Time picked was outside of business hours.");
+                                throw new Exception("Pick a time between 9AM & 5PM!");
+                            }
                         }
                         else
                         {
-                            Console.WriteLine("Time picked was outside of business hours.");
-                            throw new Exception("Pick a time between 9AM & 5PM!");
+                            Console.WriteLine("Date picked was on the weekend.");
+                            throw new Exception("Pick a day M-F!");
                         }
+
                     }
                     else
                     {
-                        Console.WriteLine("Date picked was on the weekend.");
-                        throw new Exception("Pick a day M-F!");
+                        Console.WriteLine("Input a time in the past.");
+                        throw new Exception("Cannot add an appointment in the past.");
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Input a time in the past.");
-                    throw new Exception("Cannot add an appointment in the past.");
                 }
 
 
@@ -157,47 +161,50 @@ namespace AkariBowens_Sheduling_System
 
                 DateTime tempEndTime = new DateTime(AddApptStart.Year, AddApptStart.Month, AddApptStart.Day, End_DateTimePicker.Value.Hour, End_DateTimePicker.Value.Minute, End_DateTimePicker.Value.Second);
                 Console.WriteLine($"Chosen: {Start_DateTimePicker.Value}, Now: {DateTime.Now}");
-                if (tempEndTime >= AddApptStart)
+                if (Appointment.SelectedAppointment.EndTime != End_DateTimePicker.Value)
                 {
-                    // Checks if chosen time is within business hours
-                    if (tempEndTime.Hour >= OpenTime.Hour && tempEndTime.Hour <= CloseTime.Hour)
+                    if (tempEndTime >= AddApptStart)
                     {
-                        // Checks if end time over laps with any appointments
-                        DataTable Appointments = Appointment.GetAppointments();
-                        foreach (DataRow row in Appointments.Rows)
+                        // Checks if chosen time is within business hours
+                        if (tempEndTime.Hour >= OpenTime.Hour && tempEndTime.Hour <= CloseTime.Hour)
                         {
-                            // Only check appointments with a different ID from current Appointment
-                            if ((int)row["appointmentId"] != Appointment.SelectedAppointment.ApptID)
+                            // Checks if end time over laps with any appointments
+                            DataTable Appointments = Appointment.GetAppointments();
+                            foreach (DataRow row in Appointments.Rows)
                             {
-                                // Checks for appointments on the same day
-                                if (tempEndTime.Date == (DateTime)row["start"])
+                                // Only check appointments with a different ID from current Appointment
+                                if ((int)row["appointmentId"] != Appointment.SelectedAppointment.ApptID)
                                 {
-
-                                    // same hour, but before
-                                    if (tempEndTime >= (DateTime)row["start"] && tempEndTime <= (DateTime)row["end"])
-                                    //DateTime.Compare(tempStartTime, (DateTime)row["start"]);
+                                    // Checks for appointments on the same day
+                                    if (tempEndTime.Date == (DateTime)row["start"])
                                     {
-                                        // Edit wording later
-                                        throw new ArgumentException("Ending overlaps with another appointment!");
+
+                                        // same hour, but before
+                                        if (tempEndTime >= (DateTime)row["start"] && tempEndTime <= (DateTime)row["end"])
+                                        //DateTime.Compare(tempStartTime, (DateTime)row["start"]);
+                                        {
+                                            // Edit wording later
+                                            throw new ArgumentException("Ending overlaps with another appointment!");
+                                        }
                                     }
                                 }
-                            }
 
+                            }
+                            AddApptEnd = tempEndTime;
+                            Console.WriteLine($"It works! {AddApptStart}");
+                            ToggleSave();
                         }
-                        AddApptEnd = tempEndTime;
-                        Console.WriteLine($"It works! {AddApptStart}");
-                        ToggleSave();
+                        else
+                        {
+                            Console.WriteLine("Appointment's end is earlier than its start.");
+                            throw new Exception("Pick a time after the appointed end.");
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("Appointment's end is earlier than its start.");
-                        throw new Exception("Pick a time after the appointed end.");
+                        Console.WriteLine("Chose a time and/or date in the past.");
+                        throw new Exception("Cannot add an appointment in the past.");
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Chose a time and/or date in the past.");
-                    throw new Exception("Cannot add an appointment in the past.");
                 }
             }
             catch (Exception exc)
