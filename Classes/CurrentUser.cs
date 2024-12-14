@@ -33,36 +33,33 @@ namespace AkariBowens_Sheduling_System.DB
 
         // ----- Methods ----- //
 
-        // Logs every time a new user is logged in - called in constructor - static?
         private static void LogLastLogin()
         {
 
             DateTime currentTime = DateTime.Now;
 
             string logString = $"Logged in {UserName} @{currentTime} in {UserLocation}\n ";
-            //Console.WriteLine(logString + " -- Console.Write");
-
-            string data;
+            
+            //string data;
 
             fileWriter = new FileStream(LogFilePath, FileMode.Append, FileAccess.Write);
 
             // Encodes logString 
             byte[] buffer = Encoding.UTF8.GetBytes(logString);
+            
             fileWriter.Write(buffer, 0, buffer.Length);
 
             fileWriter.Close();
 
             // -- Reads back recent data that was written to the file -- //
-            fileReader = new FileStream(LogFilePath, FileMode.Open);
-            using (StreamReader reader = new StreamReader(fileReader))
-            {
-                // make this read the very last line of the file
-                //fileReader.Position = fileReader.Length - 1;
-                
-                data = reader.ReadLine();
-            }
-            Console.WriteLine(data + " -- from fileStream");
-            //Console.ReadKey();
+            
+            //fileReader = new FileStream(LogFilePath, FileMode.Open);
+            //using (StreamReader reader = new StreamReader(fileReader))
+            //{
+            //    data = reader.ReadLine();
+            //}
+
+            Console.WriteLine(logString);
 
         }
 
@@ -75,8 +72,8 @@ namespace AkariBowens_Sheduling_System.DB
             UserName = username;
             Password = pass;
             UserLocation = location;
+            
             LogLastLogin();
-            //FifteenMinAlert();
             Console.WriteLine($"CurrentUser - {CurrentUserID}");
         }
 

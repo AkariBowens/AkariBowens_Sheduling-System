@@ -16,7 +16,7 @@ namespace AkariBowens_Sheduling_System
     public partial class AppointmentsForm : Form
     {
         public static DateTime SelectedDate;
-        //private static DataTable AllAppointments = CurrentUser.GetAppointments();
+
         private static DataTable ApptsByDay { get { return Appointment.GetAppointmentsByDate(SelectedDate); } set { Appointment.GetAppointmentsByDate(SelectedDate); } }
     
         public AppointmentsForm()
@@ -30,13 +30,15 @@ namespace AkariBowens_Sheduling_System
 
             Console.WriteLine(SelectedDate.Date + " -- Selected Date");
 
-            //appointments_DGV.DataSource = CurrentUser.GetAppointmentsByDate(SelectedDate);
-            
             appointments_DGV.DataSource = ApptsByDay;
             appointments_DGV.MultiSelect = false;
             appointments_DGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             appointments_DGV.ReadOnly = true;
             appointments_DGV.AllowUserToAddRows = false;
+
+            appointments_DGV.Columns["customerId"].Visible = false;
+            appointments_DGV.Columns["appointmentId"].Visible = false;
+            appointments_DGV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
 
         }
 
@@ -57,8 +59,6 @@ namespace AkariBowens_Sheduling_System
                 MessageBox.Show("Please select an appointment!");
             }
 
-            // appointments_DGV.DataSource = CurrentUser.GetAppointmentsByDate(SelectedDate);
-            // ApptsByDay.AcceptChanges();
             appointments_DGV.DataSource = ApptsByDay;
         }
 
@@ -69,8 +69,6 @@ namespace AkariBowens_Sheduling_System
 
                 UpdateAppointmentForm updateAppointmentForm = new UpdateAppointmentForm();
                 Console.WriteLine((int)appointments_DGV.CurrentRow.Cells["appointmentId"].Value + " -- appointmentID");
-
-                //DataTable appointments = CurrentUser.GetAppointments();
 
                 Appointment.SelectedAppointment = new Appointment((int)appointments_DGV.CurrentRow.Cells["appointmentId"].Value, (int)appointments_DGV.CurrentRow.Cells["customerId"].Value, (DateTime)appointments_DGV.CurrentRow.Cells["start"].Value, (DateTime)appointments_DGV.CurrentRow.Cells["end"].Value, appointments_DGV.CurrentRow.Cells["type"].Value.ToString());
 
@@ -86,7 +84,6 @@ namespace AkariBowens_Sheduling_System
                         {
                             Console.WriteLine(row["customerName"].ToString() + " --custName");
 
-                            // Going to have to change after Constructor update
                             Customer.SelectedCustomer = new Customer((int)row["customerID"], row["customerName"].ToString(), (int)row["addressId"]);
                         }
                     }
@@ -120,6 +117,11 @@ namespace AkariBowens_Sheduling_System
         private void Close_button_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void appointments_DGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

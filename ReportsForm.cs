@@ -1,5 +1,6 @@
 ﻿using AkariBowens_Sheduling_System.DB;
 using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,15 +27,18 @@ namespace AkariBowens_Sheduling_System.Classes
             CurrentUserViewForm currentUserViewForm = new CurrentUserViewForm();
             currentUserViewForm.Show();
             Close();
-
         }
 
         private void ApptsPerMonth_Button_Click(object sender, EventArgs e)
         {
+            VarDGVLabel.Text = "Appointments Per Month";
+
             DataTable AppointmentsPerMonthDT = new DataTable();
-            //string ApptsString = $"SELECT YEAR(start), month(start), Count(ApptId), type FROM appointment GROUPBY type ORDER BY start;";
-            string ApptsString = $"SELECT YEAR(start) as Year, monthname(start) as Month, Count(appointmentId) as Appointment(s), type as Type FROM appointment GROUP BY monthname(start), type ORDER BY start";
-            DataTable outputTable = new DataTable();
+            
+            string ApptsString = $"SELECT YEAR(start) as Year, monthname(start) as Month, Count(appointmentId) as Appointments, type as Type FROM appointment GROUP BY monthname(start), type;";
+
+            //ORDER BY start
+           DataTable outputTable = new DataTable();
             DBConnection.OpenConnection();
 
             MySqlConnection connection = DBConnection.connect;
@@ -56,6 +60,7 @@ namespace AkariBowens_Sheduling_System.Classes
             }
 
             ReportsDGV.DataSource = AppointmentsPerMonthDT;
+            ReportsDGV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
 
         }
 
@@ -64,39 +69,38 @@ namespace AkariBowens_Sheduling_System.Classes
 
         }
 
-        private async void UserSchedule_Button_Click(object sender, EventArgs e)
+        private void UserSchedule_Button_Click(object sender, EventArgs e)
         {
+            VarDGVLabel.Text = "User Schedule";
+
             // Opens a list of customers
             DataTable userSchedule = new DataTable();
             
             // Opens a new form with a list of users
             UsersListForm usersListForm = new UsersListForm();
             usersListForm.ShowDialog();
+            if (User.SelectedUser != null) {
+                int selectedUserId = User.SelectedUser.UserID;
+                DataTable tempTable = User.GetUserSchedule(selectedUserId);
 
-            // Task<int> selectedUserID() => Task.FromResult(User.SelectedUser.UserID);
-            int selectedUserId = User.SelectedUser.UserID;
-            Console.WriteLine(selectedUserId + " -- ReportsForm 105");
-            //Task<DataTable> tempTable = Task.FromResult(User.GetUserSchedule(await selectedUserID()));
-            DataTable tempTable = User.GetUserSchedule(selectedUserId);
+                userSchedule = tempTable.Clone();
+                var query = tempTable.AsEnumerable().OrderBy(c => (DateTime)c["start"]);
 
-            //tempTable = Task.FromResult(tempTable.OrderBy(c => c["start"]));
-            //tempTable = tempTable.AsEnumerable().OrderBy(c => c["start"]);
-            userSchedule = tempTable.Clone();
-            //userSchedule = await tempTable;
-            var query = tempTable.AsEnumerable().OrderBy(c => (DateTime)c["start"]);
+                foreach (var item in query)
+                {
+                    userSchedule.Rows.Add(item[0], item[1], item[2], item[3], item[4], item[5], item[6]);
 
-            foreach (var item in query)
-            {
-                userSchedule.Rows.Add(item[0], item[1], item[2], item[3], item[4], item[5], item[6]);
-                
+                }
+
+                ReportsDGV.DataSource = userSchedule;
+                ReportsDGV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             }
-            //userSchedule = 
-
-            ReportsDGV.DataSource = userSchedule;
         }
 
         private void CustomersPerCountry_Button_Click(object sender, EventArgs e)
         {
+            VarDGVLabel.Text = "Customers per country";
+
             DataTable tempDT = new DataTable();
             DataTable CustomersPerCountry = new DataTable();
 
@@ -122,6 +126,7 @@ namespace AkariBowens_Sheduling_System.Classes
 
             CustomersPerCountry = tempDT.Clone();
 
+            
             var orderQuery = query.OrderBy(c => c.CountryName);
 
             foreach (var row in orderQuery)
@@ -132,6 +137,7 @@ namespace AkariBowens_Sheduling_System.Classes
             // Changes DataSource to CustomersPerCountryDT
             ReportsDGV.DataSource = CustomersPerCountry;
             ReportsDGV.Columns["countryId"].Visible = false;
+            ReportsDGV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
         }
 
         private void ReportsForm_Load(object sender, EventArgs e)
@@ -140,6 +146,8 @@ namespace AkariBowens_Sheduling_System.Classes
             ReportsDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             ReportsDGV.ReadOnly = true;
             ReportsDGV.AllowUserToAddRows = false;
+
+            ReportsDGV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
         }
     }
 }

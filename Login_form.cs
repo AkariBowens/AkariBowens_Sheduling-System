@@ -66,13 +66,11 @@ namespace AkariBowens_Sheduling_System
         }
 
 
-        // make this async
         public static bool GetUserAndPass()
         {
             
             try
             {
-                //string DBUser;
                 string DBPass;
 
                 if (userPass == "")
@@ -100,10 +98,8 @@ namespace AkariBowens_Sheduling_System
                             while (dataReader.Read())
                             {
                                 //DBUser = Convert.ToString(dataReader["userName"]);
-                                //Console.WriteLine(DBUser + " user");
-                                
                                 DBPass = Convert.ToString(dataReader["password"]);
-                                //Console.WriteLine(DBPass + " pass");
+                                
                                 if (userPass != DBPass)
                                 {
                                     ExceptionMessage = (clientRegion == "de-LU") ? "Passwort falsch!" : "Password incorrect!";
@@ -181,11 +177,6 @@ namespace AkariBowens_Sheduling_System
                     userPass = password_textBox.Text;
                     LoginButton();
                 } else 
-                //if (password_textBox.Text == "")
-                //{
-                //    ExceptionMessage = (clientRegion == "de-LU") ? "Geben Sie ein Passwort ein!" : "Input a passsword!";
-                //    throw new ArgumentException(ExceptionMessage);
-                //} else
                 {
                     ExceptionMessage = (clientRegion == "de-LU") ? "Passwort darf nicht leer sein!" : "Password must not be empty!";
                     throw new ArgumentException(ExceptionMessage);

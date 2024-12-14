@@ -31,39 +31,30 @@ namespace AkariBowens_Sheduling_System.DB
         public string CreatedBy { get; set; }
 
         public DateTime LastUpdate { get; set; } 
-        // Hard-code this
+
         public string LastUpdatedBy { get; set; }
 
         public static Customer SelectedCustomer { get; set; }
 
         public static List<Customer> Customers { get; set; } = new List<Customer>();
 
-        // List of args
-        private List<string> ArgsList { get; set; }
 
         // ----- Methods ----- //
         public static bool AddCustomer(Customer newCust, Address newAddr) 
         {
-            // if addressid == -1..Create else..
-            // ----- just add everything new ----- //
-            // new customer, new address, keep city and country the hard-coded
             try
             {
                 // Initializes new 'Customer' instance
                 Customer newCustomer = newCust;
 
-                
                 // Adding a Customer
                 DBConnection.OpenConnection();
                 MySqlConnection connection = DBConnection.connect;
 
                 // -- Add On -- //
-                // Do address ID logic
-                // Change addressId = 1 to something else
                 string customerInsertstring = 
                     $"INSERT INTO customer(customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy) " +
                     $"VALUES('{newCust.CustomerName}', " +
-                    // Update below to {address.AddressID} or SELECT addressId FROM address WHERE address = {address.AddressName} and phone = {address.Phone}
                     $"{newCust.AddressID}, " +
                     $"{newCust.Active}, " +
                     $"'{newCust.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")}', " +
@@ -95,11 +86,8 @@ namespace AkariBowens_Sheduling_System.DB
         {
             try
             {
-                // -- Only for testing -- //
-                //custId = 50;
-
                 int inputCustID = custId;
-                //int result;
+                
                 Console.WriteLine(custId + " -- custId");
                 Console.WriteLine(inputCustID + " -- inputCustID");
 
@@ -114,13 +102,9 @@ namespace AkariBowens_Sheduling_System.DB
                     MySqlCommand deleteCustomer = new MySqlCommand(deleteString, DBConnection.connect);
                     DBConnection.OpenConnection();
 
-                    //result = Convert.ToInt32(
                     deleteCustomer.ExecuteNonQuery();
                 }
 
-                //DBConnection.CloseConnection();
-
-                //Console.WriteLine(result);
                 return true;
                
             }
@@ -179,8 +163,6 @@ namespace AkariBowens_Sheduling_System.DB
 
             DataTable CustomerList = new DataTable();
 
-            //string allCustomersQuery = $"SELECT customerId, customerName, address.addressId, address FROM customer INNER JOIN address WHERE customer.addressId = address.addressId;";
-
             string allCustomersQuery = $"SELECT customerId, customerName, phone, address, address.addressId, postalCode, city, city.cityId, country, country.countryId FROM customer INNER JOIN address ON customer.addressId = address.addressId INNER JOIN city ON address.cityId = city.cityId INNER JOIN country ON city.countryId = country.countryId;";
             
             MySqlCommand customersQuery = new MySqlCommand(allCustomersQuery, DBConnection.connect);
@@ -216,12 +198,6 @@ namespace AkariBowens_Sheduling_System.DB
                 newAddress.PostalCode = item.PostalCode;
 
                 Customers.Add(newCust);
-                //Address.Addresses.Add(newAddress);
-                // City.Cities.Add(item.CityId, item.City, item.CountryId);
-                // Country.Countries.Add(item.CountryId, item.Country);
-
-                //AddressList.Rows.Add(item.AddressID, item.AddressName, item.CityId, item.PostalCode, item.Phone);
-
                 CustomerList.Rows.Add(item.CustomerId, item.CustomerName, item.Phone, item.AddressName, item.AddressID, item.PostalCode, item.City, item.CityId, item.Country, item.CountryId);
             }
             

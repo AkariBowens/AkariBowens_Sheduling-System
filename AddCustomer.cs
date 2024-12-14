@@ -48,7 +48,7 @@ namespace AkariBowens_Sheduling_System
                     throw new ArgumentException("Phone number cannot be empty!");
                 }
 
-                // test if it only contains dashes or dashes
+                // Tests if it only contains dashes or dashes
                 foreach (char item in phone_textBox.Text)
                 {
                     if ((item >= '0' && item <= '9') || item == (char)45)

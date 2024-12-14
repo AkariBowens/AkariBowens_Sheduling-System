@@ -43,9 +43,7 @@ namespace AkariBowens_Sheduling_System
 
             Customer_textBox.Text = Customer.SelectedCustomer.CustomerName;
             Customer_textBox.Enabled = false;
-
-            //save_button.Enabled = false;
-            
+   
         }
 
         private void ToggleSave()
@@ -85,7 +83,8 @@ namespace AkariBowens_Sheduling_System
 
                 DateTime tempStartTime = Start_DateTimePicker.Value;
                 Console.WriteLine($"Chosen: {Start_DateTimePicker.Value}, Now: {DateTime.Now}");
-                // if the values of selected and new are different - then.. allowSave();
+                
+                // If the values of selected and new are different, then.. AllowSave();
                 if (Appointment.SelectedAppointment.StartTime != Start_DateTimePicker.Value)
                 {
                     if (tempStartTime >= DateTime.Now)
@@ -108,12 +107,7 @@ namespace AkariBowens_Sheduling_System
                                                 // Edit wording later
                                                 throw new ArgumentException("Times cannot over lap!");
                                             }
-                                            //else
-                                            //{
-                                            //    AddApptStart = tempStartTime;
-                                            //    Console.WriteLine($"It works! {AddApptStart}");
-                                            //    ToggleSave();
-                                            //}
+                                            
                                         }
                                     }
 
@@ -148,8 +142,7 @@ namespace AkariBowens_Sheduling_System
             {
                 Console.WriteLine(exc.Message.ToString());
                 MessageBox.Show(exc.Message.ToString());
-                //start_textBox.BackColor = Color.Tomato;
-                //start_textBox.Clear();
+
 
             }
         }
@@ -211,8 +204,6 @@ namespace AkariBowens_Sheduling_System
             {
                 Console.WriteLine(exc.Message.ToString());
                 MessageBox.Show(exc.Message.ToString());
-                //start_textBox.BackColor = Color.Tomato;
-                //start_textBox.Clear();
             }
         }
 

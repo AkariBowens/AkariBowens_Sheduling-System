@@ -30,10 +30,8 @@ namespace AkariBowens_Sheduling_System
             // Deletes Selected Customer
             try
             {
-                //if row selected - MessageBox.Show("yes or no", select a customer);
                 if (CustomerDGV.CurrentRow == null || !CustomerDGV.CurrentRow.Selected)
                 {
-                    //MessageBox.Show("Select a customer.", "Delete customer.");
                     throw new ArgumentNullException("No cutomer selected");
                 }
 
@@ -41,7 +39,7 @@ namespace AkariBowens_Sheduling_System
                DialogResult deleteConfirmation = MessageBox.Show("Are you sure you want to delete this?", "Delete Customer", MessageBoxButtons.YesNo);
                if (deleteConfirmation == DialogResult.Yes)
                {
-                    //int selectedCustId = CustomerDGV.CurrentRow.Index;
+
                     int selectedCustId;
                     Int32.TryParse(Convert.ToString(CustomerDGV.CurrentRow.Cells[0].Value), out selectedCustId);
 
@@ -79,8 +77,7 @@ namespace AkariBowens_Sheduling_System
             Customer.SelectedCustomer = new Customer((int)CustomerDGV.CurrentRow.Cells["customerId"].Value, CustomerDGV.CurrentRow.Cells["customerName"].Value.ToString(), (int)CustomerDGV.CurrentRow.Cells["addressId"].Value);
 
             Address.SelectedAddress = new Address((int)CustomerDGV.CurrentRow.Cells["addressId"].Value, CustomerDGV.CurrentRow.Cells["address"].Value.ToString(), CustomerDGV.CurrentRow.Cells["phone"].Value.ToString());
-            // Copy AddCustomerForm, update with update labels
-            //Address.SelectedAddress = new Address();
+
             UpdateCustomerForm updateCustomer = new UpdateCustomerForm();
             updateCustomer.Show();
             Close();
@@ -110,31 +107,32 @@ namespace AkariBowens_Sheduling_System
         {
 
             // ----- Customer DGV ----- //
+
             CustomerDGV.DataSource = Customer.GetCustomers();
             CustomerDGV.MultiSelect = false;
             CustomerDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             CustomerDGV.ReadOnly = true;
             CustomerDGV.AllowUserToAddRows = false;
-
-            // Change after I fix address
-            // Hide customerId, addressId, cityId, countryId
+            CustomerDGV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            
             CustomerDGV.Columns["customerId"].Visible = false;
             CustomerDGV.Columns["addressId"].Visible = false;
             CustomerDGV.Columns["cityId"].Visible = false;
             CustomerDGV.Columns["countryId"].Visible = false;
 
-
+            
             // ----- Appointment DGV ----- //
+
             AppointmentDGV.DataSource = Appointment.GetAppointments();
             AppointmentDGV.MultiSelect = false;
             AppointmentDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             AppointmentDGV.ReadOnly = true;
             AppointmentDGV.AllowUserToAddRows = false;
+            AppointmentDGV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
 
             AppointmentDGV.Columns["userId"].Visible = false;
+            
 
-
-            //Console.WriteLine(Customer.GetCustomers().AsEnumerable().Where(cust => (int)cust[columnName: "customerId"] == 1);
         }
 
         private void AppointmentDGV_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -154,8 +152,6 @@ namespace AkariBowens_Sheduling_System
 
         private void appts_add_button_Click(object sender, EventArgs e)
         {
-            
-            
             try
             {
                 // Opens new Add Appointment Form
@@ -170,7 +166,7 @@ namespace AkariBowens_Sheduling_System
 
                 addAppointment.Show();
                 Close();
-                //Customer.SelectedCustomer = null;
+
             }
             catch (Exception exc)
             {

@@ -42,8 +42,9 @@
             this.appointments_DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.appointments_DGV.Location = new System.Drawing.Point(67, 91);
             this.appointments_DGV.Name = "appointments_DGV";
-            this.appointments_DGV.Size = new System.Drawing.Size(450, 150);
+            this.appointments_DGV.Size = new System.Drawing.Size(502, 150);
             this.appointments_DGV.TabIndex = 0;
+            this.appointments_DGV.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.appointments_DGV_CellContentClick);
             // 
             // appointments_label
             // 
@@ -58,7 +59,7 @@
             // Add_Button
             // 
             this.Add_Button.Font = new System.Drawing.Font("Gadugi", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Add_Button.Location = new System.Drawing.Point(273, 264);
+            this.Add_Button.Location = new System.Drawing.Point(257, 264);
             this.Add_Button.Name = "Add_Button";
             this.Add_Button.Size = new System.Drawing.Size(82, 42);
             this.Add_Button.TabIndex = 2;
@@ -69,7 +70,7 @@
             // Update_Button
             // 
             this.Update_Button.Font = new System.Drawing.Font("Gadugi", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Update_Button.Location = new System.Drawing.Point(178, 264);
+            this.Update_Button.Location = new System.Drawing.Point(162, 264);
             this.Update_Button.Name = "Update_Button";
             this.Update_Button.Size = new System.Drawing.Size(82, 42);
             this.Update_Button.TabIndex = 3;
@@ -80,7 +81,7 @@
             // Delete_Button
             // 
             this.Delete_Button.Font = new System.Drawing.Font("Gadugi", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Delete_Button.Location = new System.Drawing.Point(83, 264);
+            this.Delete_Button.Location = new System.Drawing.Point(67, 264);
             this.Delete_Button.Name = "Delete_Button";
             this.Delete_Button.Size = new System.Drawing.Size(82, 42);
             this.Delete_Button.TabIndex = 4;
@@ -91,7 +92,7 @@
             // Close_button
             // 
             this.Close_button.Font = new System.Drawing.Font("Gadugi", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Close_button.Location = new System.Drawing.Point(419, 264);
+            this.Close_button.Location = new System.Drawing.Point(487, 264);
             this.Close_button.Name = "Close_button";
             this.Close_button.Size = new System.Drawing.Size(82, 42);
             this.Close_button.TabIndex = 5;
@@ -103,7 +104,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(583, 371);
+            this.ClientSize = new System.Drawing.Size(642, 371);
             this.Controls.Add(this.Close_button);
             this.Controls.Add(this.Delete_Button);
             this.Controls.Add(this.Update_Button);

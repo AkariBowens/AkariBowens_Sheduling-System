@@ -125,16 +125,16 @@
     <Compile Include="Classes\Address.cs" />
     <Compile Include="Classes\City.cs" />
     <Compile Include="Classes\Country.cs" />
-    <Compile Include="Classes\ReportsForm.cs">
+    <Compile Include="ReportsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Classes\ReportsForm.Designer.cs">
+    <Compile Include="ReportsForm.Designer.cs">
       <DependentUpon>ReportsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\UsersListForm.cs">
+    <Compile Include="UsersListForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Classes\UsersListForm.Designer.cs">
+    <Compile Include="UsersListForm.Designer.cs">
       <DependentUpon>UsersListForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CurrentUserViewForm.cs">
@@ -180,10 +180,10 @@
     <EmbeddedResource Include="AppointmentsForm.resx">
       <DependentUpon>AppointmentsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Classes\ReportsForm.resx">
+    <EmbeddedResource Include="ReportsForm.resx">
       <DependentUpon>ReportsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Classes\UsersListForm.resx">
+    <EmbeddedResource Include="UsersListForm.resx">
       <DependentUpon>UsersListForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CurrentUserViewForm.resx">

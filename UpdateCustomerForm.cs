@@ -64,12 +64,10 @@ namespace AkariBowens_Sheduling_System
             try
             {
 
-                //Address
-                //Address.AddAddress();
 
                 Customer newCust = new Customer(Customer.SelectedCustomer.CustomerID, UpdateCustomerName, Customer.SelectedCustomer.AddressID);
                 Address newAddr = new Address(Address.SelectedAddress.AddressID, UpdateCustomerAddress, UpdateCustomerPhone);
-                // only run updates based-on changed boxes
+                // Only run update based on changed boxes
 
                 if (UpdateCustomerAddress != Address.SelectedAddress.AddressName || UpdateCustomerPhone != Address.SelectedAddress.Phone)
                 {
@@ -150,7 +148,7 @@ namespace AkariBowens_Sheduling_System
                         throw new ArgumentException("Phone number cannot be empty!");
                     }
 
-                    // test if it only contains dashes or dashes
+                    // Tests if textbox only contains dashes or dashes
                     foreach (char item in phone_textBox.Text)
                     {
                         if ((item >= '0' && item <= '9') || item == (char)45)

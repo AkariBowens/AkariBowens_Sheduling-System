@@ -16,8 +16,6 @@ namespace AkariBowens_Sheduling_System
         private string AddApptType;
         private DateTime AddApptStart;
         private DateTime AddApptEnd;
-        //private string AddCustomerName;
-        //private DateTime AddApptDate;
 
         private DateTime OpenTime = new DateTime(2000, 12, 31, 9, 0, 0);
         private DateTime CloseTime = new DateTime(2000, 12, 31, 17, 0, 0);
@@ -31,49 +29,21 @@ namespace AkariBowens_Sheduling_System
 
         private void AddAppointmentForm_Load(object sender, EventArgs e)
         {
-            // Fill in later with data from DGV
-            
-            if (isNewAppt == false) 
-            {
-                //foreach(DataRow row in CurrentUser.Appointments.Rows)
-                //{
-                //    if (Convert.ToInt32(row["customerId"]) == Appointment.SelectedAppointment.CustID)
-                //    {
-                //        Customer_textBox.Text = row["customerName"].ToString();
-                //        return;
-                //    }
-                //}
-                ApptType_textBox.Text = currentAppointment.ApptType;
-                Start_DateTimePicker.Value = currentAppointment.StartTime;
-                End_DateTimePicker.Value = currentAppointment.EndTime;
 
-            } 
-            else 
-            {
-                Customer_textBox.Text = Customer.SelectedCustomer.CustomerName;
-            }
+            Customer_textBox.Text = Customer.SelectedCustomer.CustomerName;
             Customer_textBox.Enabled = false;
             save_button.Enabled = false;
         }
 
         private void ToggleSave()
         {
-            //AddApptEnd = new DateTime(AddApptStart.Year, AddApptStart.Month, AddApptStart.Day);
-            Console.WriteLine($"{AddApptEnd} --ToggleSave()..62");
+
             if(AddApptStart != null && AddApptEnd != null && AddApptEnd > AddApptStart && !string.IsNullOrWhiteSpace(ApptType_textBox.Text))
             {
                 save_button.Enabled = true;
             }
             
         }
-        // returns bool
-        // checks validity after conversions & when type != empty
-
-        // TextBoxesValid();
-        //
-
-        // save_button_clicked();
-        //
 
         private void ApptType_textBox_TextChanged(object sender, EventArgs e)
         {
@@ -260,9 +230,7 @@ namespace AkariBowens_Sheduling_System
         {
             try
             {
-             
-                // Only run error message when you Start_DateTimePicker is out of focus
-
+                
                 DateTime tempStartTime = Start_DateTimePicker.Value;
                 Console.WriteLine($"Chosen: {Start_DateTimePicker.Value}, Now: {DateTime.Now}");
                 if (tempStartTime >= DateTime.Now)
@@ -280,14 +248,12 @@ namespace AkariBowens_Sheduling_System
                                 {
                                     if (tempStartTime >= (DateTime)row["start"] && tempStartTime <= (DateTime)row["end"])
                                     {
-                                        // Edit wording later
-                                        throw new ArgumentException("Times cannot over lap!");
+                                        throw new ArgumentException("Time cannot overlap with another appointment!");
                                     }
                                 }
                                 
                             }
                             AddApptStart = tempStartTime;
-                            Console.WriteLine($"It works! {AddApptStart} -- Start time");
                             ToggleSave();
                         }
                         else
@@ -314,8 +280,6 @@ namespace AkariBowens_Sheduling_System
             {
                 Console.WriteLine(exc.Message.ToString());
                 MessageBox.Show(exc.Message.ToString());
-      
-
             }
         }
 
@@ -326,8 +290,6 @@ namespace AkariBowens_Sheduling_System
             try
             {
 
-                // DateTime tempEndTime = new DateTime(Start_DateTimePicker.Value.Year, Start_DateTimePicker.Value.Month, Start_DateTimePicker.Value.Day, End_DateTimePicker.Value.Hour, End_DateTimePicker.Value.Minute, End_DateTimePicker.Value.Second);
-
                 DateTime endTimePicker = End_DateTimePicker.Value;
                 
                 Console.WriteLine($"Chosen: {End_DateTimePicker.Value}, Now: {DateTime.Now} -- End..331");
@@ -336,7 +298,7 @@ namespace AkariBowens_Sheduling_System
                     // Checks if chosen time is within business hours
                      if (End_DateTimePicker.Value.Hour >= OpenTime.Hour && End_DateTimePicker.Value.Hour <= CloseTime.Hour)
                         {
-                            Console.WriteLine("Within business hours.");
+                            
                             // Checks if end time over laps with any appointments
                             DataTable Appointments = Appointment.GetAppointments();
                             foreach (DataRow row in Appointments.Rows)
@@ -348,16 +310,12 @@ namespace AkariBowens_Sheduling_System
                                 Console.WriteLine($"{appointmentDateStart} -- AddApptForm..342");
                                 if (endTimePicker.Date == appointmentDateStart.Date)
                                 {
-                                    // same hour, but before
-                                    
-                                    //rewrite this
                                     if (endTimePicker.Date >= appointmentDateStart.Date && endTimePicker.Date <= appointmentDateEnd.Date)
-                                    // DateTime.Compare(tempStartTime, (DateTime)row["start"]);
+
                                     {
                                     // Edit wording later
 
                                         AddApptEnd = endTimePicker;
-                                        Console.WriteLine($"It works! {AddApptEnd} -- ApptEnd");
                                         ToggleSave();
                                     }
                                     else

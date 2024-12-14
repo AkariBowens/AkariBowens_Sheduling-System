@@ -33,6 +33,8 @@ namespace AkariBowens_Sheduling_System.Classes
             UsersDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             UsersDGV.ReadOnly = true;
             UsersDGV.AllowUserToAddRows = false;
+
+            UsersDGV.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
         private void select_button_Click(object sender, EventArgs e)

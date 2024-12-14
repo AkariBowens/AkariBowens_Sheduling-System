@@ -29,12 +29,11 @@ namespace AkariBowens_Sheduling_System.Classes
         public string Phone {get; set;}
         public DateTime CreateDate { get; set; }
         public static string dateFormat = @"yyyy-MM-dd hh:mm:ss";
-        // Hard-code this
+
         public string CreatedBy { get; set; }
-        // is TIMESTAMP() - numbers
 
         public DateTime LastUpdate { get; set; }
-        // Hard-code this
+
         public string LastUpdatedBy { get; set; }
 
         public static Address SelectedAddress { get; set; }
@@ -75,8 +74,6 @@ namespace AkariBowens_Sheduling_System.Classes
             try 
             {
                 Console.WriteLine($"UpdateAddress: Phone-{address.Phone}; ID:{address.AddressID}");
-
-                //Address AddressToUpdate = address;
 
                 string phoneString = $"phone = '{address.Phone}'";
                 string addressString = $"address = '{address.AddressName}'";
@@ -167,13 +164,14 @@ namespace AkariBowens_Sheduling_System.Classes
             AddressID = addressId;       
             AddressName = addressName;
 
+            
+            AddressName2 = string.Empty;
+
+            // ---------- //
+
             // Update later
             //CityId = cityId;
-            AddressName2 = string.Empty;
-            // ---------- //
             CityId = 1;
-
-            //PostalCode = postalCode;
             PostalCode = Convert.ToString(GlobalPostalCode++);
             Phone = phone;
 
@@ -223,7 +221,6 @@ namespace AkariBowens_Sheduling_System.Classes
 
             return AddressTable;
         }
-        //public static Address SelectedAddress { get; set; }
     }
 
 

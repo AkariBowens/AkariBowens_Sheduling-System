@@ -52,7 +52,7 @@ namespace AkariBowens_Sheduling_System.DB
             }
             catch (MySqlException ex)
             {
-                // ----- Change to log later ----- //
+               
                 MessageBox.Show(ex.Message);
             }
          }

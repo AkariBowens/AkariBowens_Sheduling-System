@@ -14,12 +14,12 @@ namespace AkariBowens_Sheduling_System.Classes
 
         public DateTime CreateDate { get; set; }
         public static string dateFormat = @"yyyy-MM-dd hh:mm:ss";
-        // Hard-code this
+
         public string CreatedBy { get; set; }
-        // is TIMESTAMP() - numbers
+
 
         public DateTime LastUpdate { get; set; }
-        // Hard-code this
+  
         public string LastUpdatedBy { get; set; }
 
         // ----- Methods ----- //
