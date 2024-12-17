@@ -45,7 +45,8 @@ namespace AkariBowens_Sheduling_System
                 login_label.Text = "Anmelden";
                 username_label.Text = "Nutzername";
                 password_label.Text = "Passwort";
-
+                login_button.Text = "Anmelden";
+                cancel_button.Text = "Abbrechen";
                 // Error messages for validations as well
             }
 
@@ -129,6 +130,8 @@ namespace AkariBowens_Sheduling_System
 
         private void button1_Click(object sender, EventArgs e)
         {
+            login_button.Text = (clientRegion == "de-LU") ? "Anmelden" : "Log in";
+
             // Password does not match and user not found
             if (GetUserAndPass())
             {

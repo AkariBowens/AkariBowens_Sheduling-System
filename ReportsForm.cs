@@ -89,7 +89,6 @@ namespace AkariBowens_Sheduling_System.Classes
                 foreach (var item in query)
                 {
                     userSchedule.Rows.Add(item[0], item[1], item[2], item[3], item[4], item[5], item[6]);
-
                 }
 
                 ReportsDGV.DataSource = userSchedule;
