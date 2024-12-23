@@ -25,7 +25,8 @@ namespace AkariBowens_Sheduling_System.DB
         public static string UserLocation { get; set; }
 
         //"Login_History.txt"
-        private static string LogFilePath { get; set; } = "C:\\Users\\LabUser\\source\\repos\\AkariBowens_Sheduling-System\\Files\\Login_History.txt";
+        // "C:\\Users\\LabUser\\source\\repos\\AkariBowens_Sheduling-System\\Files\\Login_History.txt"
+        private static string LogFilePath { get; set; } = @"Login_History.txt";
 
         // ----- File Properties ----- //
         private static FileStream fileWriter;
